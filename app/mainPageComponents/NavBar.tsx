@@ -1,7 +1,13 @@
+"use client"
+
 import React from "react";
 import AppIcon from "../SVG_Icons/AppIcon"
+import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
 
 export default function NavBar() {
+    const { userId } = useAuth();
+
     const defaultColor = "blue";
     const backgroundColorObject = { backgroundColor: defaultColor };
     return (
@@ -27,24 +33,45 @@ export default function NavBar() {
                         </div>
                     </div>
                     {/*Sign In / Sign Up here */}
-                    <div className="mt-4 flex flex-col gap-4 sm:mt-0 sm:flex-row sm:items-center">
-                        <button
-                            style={backgroundColorObject}
-                            className={`block sm:w-32 w-full rounded-lg px-9 py-3 text-sm font-medium text-white transition focus:outline-none`}
-                            type="button"
-                        >
-                            Sign In
-                        </button>
-                        <button
-                            className={`block sm:w-32 w-full border rounded-lg px-9 py-3 text-sm font-medium transition
+                    <div>
+                        {userId ? (
+                            <Link href={"/dashboard"}>
+                                <button
+                                    style={backgroundColorObject}
+                                    className={`block rounded-lg px-9 py-3 text-sm font-medium text-white transition`}
+                                    type="button"
+                                >
+                                    Dashboard
+                                </button>
+                            </Link>
+                        ) : (
+
+
+                            <div className="mt-4 flex flex-col gap-4 sm:mt-0 sm:flex-row sm:items-center">
+                                <Link href="/sign-in">
+                                    <button
+                                        style={backgroundColorObject}
+                                        className={`block sm:w-32 w-full rounded-lg px-9 py-3 text-sm font-medium text-white transition focus:outline-none`}
+                                        type="button"
+                                    >
+                                        Sign In
+                                    </button>
+                                </Link>
+
+                                <Link href={"/sign-up"}>
+                                    <button
+                                        className={`block sm:w-32 w-full border rounded-lg px-9 py-3 text-sm font-medium transition
                         focus:outline-none hover:bg-customBlue hover:text-white border-customBlue text-customBlue`}
-                            type="button"
-                        >
-                            Sign Up
-                        </button>
+                                        type="button"
+                                    >
+                                        Sign Up
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </div>
-        </header>
+            </div >
+        </header >
     )
 }
