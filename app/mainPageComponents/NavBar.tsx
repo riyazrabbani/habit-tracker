@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
-import LogoAnName from "../Components/LogoAnName";
+import LogoAndName from "../Components/LogoAndName";
 
 export default function NavBar() {
     const { userId } = useAuth();
@@ -15,7 +15,7 @@ export default function NavBar() {
             <div className=" p-8 px-20 ">
                 <div className="sm:flex sm:items-center sm:justify-between ">
                     <div className="text-center sm:text-left mb-7 sm:mb-0">
-                        <LogoAnName />
+                        <LogoAndName />
                     </div>
                     {/*Sign In / Sign Up here */}
                     <div>

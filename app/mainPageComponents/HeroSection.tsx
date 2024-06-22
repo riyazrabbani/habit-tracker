@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function HeroSection() {
     return (
@@ -6,16 +7,18 @@ export default function HeroSection() {
             <span className="font-bold text-3xl text-center">
                 Build the habits that <span className="text-customBlue">matter</span>.
             </span>
-            <p className = "text-center text-sm sm:w-[430px] w-[370px]">
+            <p className="text-center text-sm sm:w-[430px] w-[370px]">
                 Overwhelmed? This easy-to-use habit tracker helps you take control of your day and achieve your goals.
             </p>
-
+            
+            <Link href={"/sign-up"}>
             <button
-                className = {`block text-sm font-light rounded-lg px-9 py-3 text-white transition bg-customBlue focus:outline-none`}
-                type = "button"
+                className={`block text-sm font-light rounded-lg px-9 py-3 text-white transition bg-customBlue focus:outline-none`}
+                type="button"
             >
                 {`Let's get started!`}
             </button>
+            </Link>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import AppIcon from "../SVG_Icons/AppIcon"
 import { defaultColor } from "@/colors"
 
-export default function LogoAnName() {
+export default function LogoAndName() {
     return (
         <div className="flex gap-2 items-center sm:justify-start justify-center">
             <span className="text-2xl font-light flex items-center gap-2">
