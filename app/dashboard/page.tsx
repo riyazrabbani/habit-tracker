@@ -8,7 +8,7 @@ import { menuItemType } from "../Types/MenuItemType";
 import Areas from "../Pages/Areas/Areas";
 import AllHabits from "../Pages/AllHabits/AllHabits";
 import Statistics from "../Pages/Statistics/Statistics";
-import { LocalizationProvider } from "@mui/x-date-pickers"; 
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function Dashboard() {
@@ -45,9 +45,23 @@ function Dashboard() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Sidebar />
                 {selectComponent}
+                <BlackSoftLayer />
             </LocalizationProvider>
         </div>
     )
 }
 
 export default Dashboard;
+
+function BlackSoftLayer() {
+    const { openSideBarObject } = useGlobalContextProvider();
+    const { openSideBar } = openSideBarObject;
+
+    return (
+        <div
+            className = {`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${
+                openSideBar ? "fixed": "hidden"
+            }`}
+        ></div>
+    );
+}

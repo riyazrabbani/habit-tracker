@@ -16,7 +16,11 @@ import { icon } from "@fortawesome/fontawesome-svg-core"
 const GlobalContext = createContext<GlobalContextType>({
     menuItemsObject: {
         menuItems: [],
-        setMenuItems: () => {},
+        setMenuItems: () => { },
+    },
+    openSideBarObject: {
+        openSideBar: false,
+        setOpenSideBar: () => { },
     },
 });
 
@@ -27,9 +31,14 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { name: "Areas", isSelected: false, icon: faLayerGroup },
     ]);
 
+    const [openSideBar, setOpenSideBar] = useState(false);
+
     return (
         <GlobalContext.Provider
-            value={{ menuItemsObject: { menuItems, setMenuItems } }}
+            value={{
+                menuItemsObject: { menuItems, setMenuItems },
+                openSideBarObject: { openSideBar, setOpenSideBar },
+            }}
         >
             {children}
         </GlobalContext.Provider>
