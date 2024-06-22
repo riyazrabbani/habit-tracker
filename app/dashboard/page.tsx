@@ -5,9 +5,11 @@ import { SignOutButton, useUser } from "@clerk/nextjs";
 import Sidebar from "../Components/SideBar/Sidebar";
 import { useGlobalContextProvider } from "../contextApi";
 import { menuItemType } from "../Types/MenuItemType";
-import Areas from "../Pages/Areas/Areas"
-import AllHabits from "../Pages/AllHabits/AllHabits"
-import Statistics from "../Pages/Statistics/Statistics"
+import Areas from "../Pages/Areas/Areas";
+import AllHabits from "../Pages/AllHabits/AllHabits";
+import Statistics from "../Pages/Statistics/Statistics";
+import { LocalizationProvider } from "@mui/x-date-pickers"; 
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function Dashboard() {
     const { menuItemsObject } = useGlobalContextProvider();
@@ -40,8 +42,10 @@ function Dashboard() {
     const { user } = useUser();
     return (
         <div className="flex bg-slate-50">
-            <Sidebar />
-            {selectComponent}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Sidebar />
+                {selectComponent}
+            </LocalizationProvider>
         </div>
     )
 }
