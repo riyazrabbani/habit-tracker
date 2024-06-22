@@ -39,7 +39,7 @@ function Dashboard() {
 
     const { user } = useUser();
     return (
-        <div className="flex">
+        <div className="flex bg-slate-50">
             <Sidebar />
             {selectComponent}
         </div>
