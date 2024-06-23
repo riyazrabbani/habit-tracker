@@ -1,14 +1,25 @@
 import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
+import { defaultColor, darkModeColor } from "@/colors";
+import { useGlobalContextProvider } from "@/app/contextApi";
+
 function MainStatistics() {
+    const { darkModeObject } = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
+
     const statisticsInfo = [
         { id: 1, num: 7, subTitle: "Best streaks" },
         { id: 2, num: 10, subTitle: "Perfect days" },
     ];
     return (
         <div
-            className="flex mx-4 flex-col gap-6 justify-center items-center mt-14 bg-slate-50 rounded-xl p-5 pt-7 "
+            style={{
+                backgroundColor: isDarkMode
+                    ? darkModeColor.backgroundSlate
+                    : defaultColor.backgroundSlate,
+            }}
+            className=" flex mx-4 flex-col gap-6 justify-center items-center mt-14 rounded-xl p-5 pt-7 "
         >
             <span className="font-bold text-xl cursor-pointer hover:text-customBlue">
                 Statistics
@@ -27,8 +38,17 @@ function MainStatistics() {
                     <div className="flex items-center gap-3 " key={singleItemIndex}>
                         <div className="w-2 h-2 bg-customBlue rounded-full"></div>
                         <div className="text-[12px]">
-                            <span className="flex flex-col font-bold">{singleItem.num}</span>
-                            <span className=" text-gray-500">{singleItem.subTitle}</span>
+                            <span className="flex flex-col font-bold ">{singleItem.num}</span>
+                            <span
+                                style={{
+                                    color: isDarkMode
+                                        ? darkModeColor.textColor
+                                        : defaultColor.textColor50,
+                                }}
+                                className=" "
+                            >
+                                {singleItem.subTitle}
+                            </span>
                         </div>
                     </div>
                 ))}
@@ -67,6 +87,7 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
                 fill="#888fd8"
                 paddingAngle={0}
                 dataKey="value"
+                stroke = "none"
             >
                 {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

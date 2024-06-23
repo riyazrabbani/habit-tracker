@@ -10,9 +10,11 @@ import AllHabits from "../Pages/AllHabits/AllHabits";
 import Statistics from "../Pages/Statistics/Statistics";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { darkModeColor, defaultColor } from "@/colors";
 
 function Dashboard() {
-    const { menuItemsObject } = useGlobalContextProvider();
+    const { menuItemsObject, darkModeObject } = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
     const { menuItems } = menuItemsObject;
     const [selectedMenu, setSelectedMenu] = useState<menuItemType | null>(null);
     let selectComponent = null;
@@ -41,7 +43,13 @@ function Dashboard() {
 
     const { user } = useUser();
     return (
-        <div className="flex bg-slate-50">
+        <div
+            style={{
+                backgroundColor: isDarkMode 
+                ? darkModeColor.backgroundSlate 
+                : defaultColor.backgroundSlate,
+            }}
+            className=" flex ">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Sidebar />
                 {selectComponent}
@@ -59,9 +67,8 @@ function BlackSoftLayer() {
 
     return (
         <div
-            className = {`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${
-                openSideBar ? "fixed": "hidden"
-            }`}
+            className={`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${openSideBar ? "fixed" : "hidden"
+                }`}
         ></div>
     );
 }

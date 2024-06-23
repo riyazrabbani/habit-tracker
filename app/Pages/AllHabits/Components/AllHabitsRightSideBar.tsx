@@ -1,17 +1,30 @@
 import React from "react"
 
-import { defaultColor } from "@/colors";
+import { darkModeColor, defaultColor } from "@/colors";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import UserProfile from "./RightSideBar/UserProfile"
 import MainStatistics from "./RightSideBar/MainStatistics"
 import Calendar from "./RightSideBar/Calendar"
+import { useGlobalContextProvider } from "@/app/contextApi";
 
 function AllHabitsRightSideBar() {
-    return <div className = " w-[30%] flex flex-col items-center bg-white m-5 rounded-lg p-2 ">
+    const { darkModeObject} = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
+
+    return (
+    <div
+    style = {{
+        color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,
+        backgroundColor : isDarkMode 
+        ? darkModeColor.background 
+        : defaultColor.background,
+    }}
+     className = " flex flex-col items-center-center m-3 rounded-lg p-2 ">
         <UserProfile />
         <MainStatistics />
         <Calendar />
     </div>
+    );
 }
 
 export default AllHabitsRightSideBar;
