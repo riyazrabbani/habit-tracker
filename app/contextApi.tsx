@@ -9,9 +9,11 @@ import {
     faChartSimple,
     faLayerGroup,
     faList,
-    faRectangleList
+    faRectangleList,
+    faSun,
+    faMoon
 } from "@fortawesome/free-solid-svg-icons"
-import { icon } from "@fortawesome/fontawesome-svg-core"
+import { DarkModeItem } from "./Types/DarkModeTypes"
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemsObject: {
@@ -22,22 +24,40 @@ const GlobalContext = createContext<GlobalContextType>({
         openSideBar: false,
         setOpenSideBar: () => { },
     },
-});
+    darkModeObject: {
+        isDarkMode: false,
+        setDarkMode: () => {},
+        darkModeItems: [],
+        setDarkModeItems: () => {},
+    },
+}); 
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [menuItems, setMenuItems] = useState<menuItemType[]>([
         { name: "All Habits", isSelected: true, icon: faRectangleList },
-        { name: "Statistics", isSelected: false, icon: faChartSimple },
+        { name: "Statistics", isSelected: false, icon: faChartSimple } ,
         { name: "Areas", isSelected: false, icon: faLayerGroup },
     ]);
 
-    const [openSideBar, setOpenSideBar] = useState(false);
+    const [ darkModeItems, setDarkModeItems] = useState<DarkModeItem[]>([
+        {id: 1, icon: faSun, isSelected: true},
+        {id: 2, icon: faMoon, isSelected: false},
 
+    ])
+
+    const [openSideBar, setOpenSideBar] = useState<boolean>(false);
+    const [isDarkMode, setDarkMode] = useState<boolean>(false);
     return (
         <GlobalContext.Provider
             value={{
                 menuItemsObject: { menuItems, setMenuItems },
                 openSideBarObject: { openSideBar, setOpenSideBar },
+                darkModeObject: {
+                    isDarkMode,
+                    setDarkMode,
+                    darkModeItems,
+                    setDarkModeItems,
+                },
             }}
         >
             {children}

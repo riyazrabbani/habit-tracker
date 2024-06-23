@@ -5,9 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { UserButton, UserProfile } from "@clerk/nextjs";
 import { useGlobalContextProvider } from "@/app/contextApi";
+import { darkModeColor, defaultColor } from "@/colors";
+
 function AllHabitsTopBar() {
-    const { openSideBarObject } = useGlobalContextProvider();
+    const { openSideBarObject, darkModeObject } = useGlobalContextProvider();
     const { openSideBar, setOpenSideBar } = openSideBarObject;
+    const { isDarkMode } = darkModeObject;
 
     const userButtonAppearance = {
         elements: {
@@ -36,7 +39,12 @@ function AllHabitsTopBar() {
 
 
     return (
-        <div className="bg-white p-5 rounded-md flex justify-between">
+        <div 
+        style = {{
+            color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,
+            backgroundColor: isDarkMode ? darkModeColor.background : defaultColor.background,
+        }}
+        className="p-5 rounded-md flex justify-between transition-all">
             <div className="flex gap-4">
                 <div className="max-lg:flex hidden ">
                     <UserButton appearance={userButtonAppearance} />
