@@ -26,27 +26,32 @@ const GlobalContext = createContext<GlobalContextType>({
     },
     darkModeObject: {
         isDarkMode: false,
-        setDarkMode: () => {},
+        setDarkMode: () => { },
         darkModeItems: [],
-        setDarkModeItems: () => {},
+        setDarkModeItems: () => { },
     },
-}); 
+    habitWindowObject: {
+        openHabitWindow: false,
+        setOpenHabitWindow: () => {},
+    }
+});
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [menuItems, setMenuItems] = useState<menuItemType[]>([
         { name: "All Habits", isSelected: true, icon: faRectangleList },
-        { name: "Statistics", isSelected: false, icon: faChartSimple } ,
+        { name: "Statistics", isSelected: false, icon: faChartSimple },
         { name: "Areas", isSelected: false, icon: faLayerGroup },
     ]);
 
-    const [ darkModeItems, setDarkModeItems] = useState<DarkModeItem[]>([
-        {id: 1, icon: faSun, isSelected: true},
-        {id: 2, icon: faMoon, isSelected: false},
+    const [darkModeItems, setDarkModeItems] = useState<DarkModeItem[]>([
+        { id: 1, icon: faSun, isSelected: true },
+        { id: 2, icon: faMoon, isSelected: false },
 
     ])
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
+    const [openHabitWindow, setOpenHabitWindow] = useState<boolean>(false);
     return (
         <GlobalContext.Provider
             value={{
@@ -58,6 +63,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                     darkModeItems,
                     setDarkModeItems,
                 },
+                habitWindowObject: {
+                    openHabitWindow,
+                    setOpenHabitWindow,
+                }
             }}
         >
             {children}

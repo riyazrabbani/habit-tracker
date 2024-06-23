@@ -11,6 +11,7 @@ import Statistics from "../Pages/Statistics/Statistics";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { darkModeColor, defaultColor } from "@/colors";
+import HabitWindow from "../Pages/AllHabits/Components/HabitWindow";
 
 function Dashboard() {
     const { menuItemsObject, darkModeObject } = useGlobalContextProvider();
@@ -62,12 +63,14 @@ function Dashboard() {
 export default Dashboard;
 
 function BlackSoftLayer() {
-    const { openSideBarObject } = useGlobalContextProvider();
+    const { openSideBarObject, habitWindowObject } = useGlobalContextProvider();
     const { openSideBar } = openSideBarObject;
+    const { openHabitWindow } = habitWindowObject;
+
 
     return (
         <div
-            className={`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${openSideBar ? "fixed" : "hidden"
+            className={`w-full h-full bg-black fixed top-0 left-0 opacity-20 z-40 ${openSideBar || openHabitWindow ? "fixed" : "hidden"
                 }`}
         ></div>
     );

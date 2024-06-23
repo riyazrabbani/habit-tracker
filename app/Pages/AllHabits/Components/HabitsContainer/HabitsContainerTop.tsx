@@ -5,7 +5,11 @@ import { IconButton } from "@mui/material"
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import { useGlobalContextProvider } from "@/app/contextApi";
+
 export default function HabitsContainerTop() {
+    const {habitWindowObject} = useGlobalContextProvider();
+    const {setOpenHabitWindow} = habitWindowObject;
+
     return (
         <div className="p-3 flex justify-between items-center ">
             <div className="flex gap-4 items-center">
@@ -25,6 +29,7 @@ export default function HabitsContainerTop() {
 
             </div>
             <button
+                onClick = {() => setOpenHabitWindow(true)}
                 className="flex gap-2 items-center bg-customBlue p-3 text-white rounded-md text-sm"
             >
                 <FontAwesomeIcon icon={faPlus} />
