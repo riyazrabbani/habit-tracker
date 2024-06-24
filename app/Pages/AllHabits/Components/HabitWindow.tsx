@@ -12,6 +12,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 type FrequencyType = {
     type: string;
     days: string[];
+    number: number;
 }
 
 type HabitType = {
@@ -43,7 +44,7 @@ function HabitWindow() {
         _id: "",
         name: "",
         icon: faChevronDown,
-        frequency: [{ type: "Daily", days: ["M"] }],
+        frequency: [{ type: "Daily", days: ["M"], number: 1 }],
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -71,9 +72,18 @@ function HabitWindow() {
     function changeDaysOption(allDays: DayOption[]) {
         const selectedDays = allDays.filter((singleDay) => singleDay.isSelected).map((day => day.name));
 
-        const copyHabitsItem = {...habitItem};
+        const copyHabitsItem = { ...habitItem };
 
         copyHabitsItem.frequency[0].days = selectedDays;
+
+        setHabitItem(copyHabitsItem);
+    }
+
+    function changeWeeksOption(weeks: number) {
+
+        const copyHabitsItem = { ...habitItem };
+
+        copyHabitsItem.frequency[0].number = weeks;
 
         setHabitItem(copyHabitsItem);
     }
@@ -106,7 +116,7 @@ function HabitWindow() {
                 setOpenIconWindow={setOpenIconWindow}
                 iconSelected={iconSelected}
             />
-            <Repeat onChangeOption={changeRepeatOption} onChangeDaysOption = {changeDaysOption} />
+            <Repeat onChangeOption={changeRepeatOption} onChangeDaysOption={changeDaysOption} onChangeWeeksOption={changeWeeksOption} />
             <SaveButton habit={habitItem} />
         </div>
     )
@@ -197,9 +207,11 @@ function InputNameAndIconButton({
 function Repeat({
     onChangeOption,
     onChangeDaysOption,
+    onChangeWeeksOption,
 }: {
     onChangeOption: (repeatOptions: RepeatOption[]) => void;
     onChangeDaysOption: (allDays: DayOption[]) => void;
+    onChangeWeeksOption: (weeks: number) => void
 }) {
 
     const [repeatOptions, setRepeatOptions] = useState<RepeatOption[]>([
@@ -219,9 +231,11 @@ function Repeat({
     ];
 
     const [allDays, setAllDays] = useState<DayOption[]>(days);
+    const [weeks, setWeeks] = useState(1);
 
     const { darkModeObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
+    const [nameOfSelectedOption, setNameOfSelectedOption] = useState("");
 
     function changeOption(indexClicked: number) {
         const updateRepeatOptions = repeatOptions.map((singleOption, index) => {
@@ -237,6 +251,20 @@ function Repeat({
     useEffect(() => {
         onChangeDaysOption(allDays);
     }, [allDays])
+
+    useEffect(() => {
+        onChangeWeeksOption(weeks);
+    }, [weeks])
+
+    useEffect(() => {
+        const getNameOptionSelected = repeatOptions.filter(
+            (singleOption) => singleOption.isSelected
+        )[0].name;
+
+        setNameOfSelectedOption(getNameOptionSelected);
+    }, [repeatOptions])
+
+
 
     return (
         <div className="flex flex-col gap-2 mt-10 px-3">
@@ -264,7 +292,9 @@ function Repeat({
                     </button>
                 ))}
             </div>
-            <DailyOptions allDays={allDays} setAllDays={setAllDays} />
+            {nameOfSelectedOption === "Daily" ? (<DailyOptions allDays={allDays} setAllDays={setAllDays} />) : (
+                <WeeklyOptions weeks={weeks} setWeek={setWeeks} />
+            )}
         </div>
     )
 }
@@ -325,6 +355,60 @@ function DailyOptions({
                         {singleDay.name}
                     </span>
                 ))}
+            </div>
+        </div>
+    )
+}
+
+function WeeklyOptions({
+    weeks,
+    setWeek,
+}: {
+    weeks: number;
+    setWeek: React.Dispatch<React.SetStateAction<number>>;
+}) {
+    const { darkModeObject } = useGlobalContextProvider();
+    const { isDarkMode } = darkModeObject;
+
+    function updateCounter(option: string) {
+        if (option === "up") {
+            setWeek((prev) => (prev < 7 ? prev + 1 : 7));
+        }
+
+        if (option === "down") {
+            setWeek((prev) => (prev > 1 ? prev - 1 : 1));
+        }
+    }
+    return (
+        <div className="mt-7 flex gap-20">
+            <div className="flex flex-col gap-2">
+                <span className="font-semibold">Frequency</span>
+                <span className="text-sm font-light text-gray-400">
+                    {weeks} times a week
+                </span>
+            </div>
+            <div className="flex items-center justify-center">
+                <button
+                    onClick={() => updateCounter("down")}
+                    style={{
+                        backgroundColor: !isDarkMode ? defaultColor[100] : defaultColor[50],
+                        color: !isDarkMode ? defaultColor.default : darkModeColor.textColor,
+                    }}
+                    className="p-3 w-10 rounded-md text-white"
+                >
+                    -
+                </button>
+                <span className="p-4 px-5 select-none">{weeks}</span>
+                <button
+                    onClick={() => updateCounter("up")}
+                    style={{
+                        backgroundColor: !isDarkMode ? defaultColor[100] : defaultColor[50],
+                        color: !isDarkMode ? defaultColor.default : darkModeColor.textColor,
+                    }}
+                    className="p-3 w-10 rounded-md text-white"
+                >
+                    +
+                </button>
             </div>
         </div>
     )
