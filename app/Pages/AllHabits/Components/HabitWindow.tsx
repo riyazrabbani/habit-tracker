@@ -118,6 +118,7 @@ function HabitWindow() {
             />
             <Repeat onChangeOption={changeRepeatOption} onChangeDaysOption={changeDaysOption} onChangeWeeksOption={changeWeeksOption} />
             <SaveButton habit={habitItem} />
+            <Reminder/>
         </div>
     )
 }
@@ -293,7 +294,7 @@ function Repeat({
                 ))}
             </div>
             {nameOfSelectedOption === "Daily" ? (<DailyOptions allDays={allDays} setAllDays={setAllDays} />) : (
-                <WeeklyOptions weeks={weeks} setWeek={setWeeks} />
+                <WeeklyOption weeks={weeks} setWeek={setWeeks} />
             )}
         </div>
     )
@@ -360,7 +361,7 @@ function DailyOptions({
     )
 }
 
-function WeeklyOptions({
+function WeeklyOption({
     weeks,
     setWeek,
 }: {
@@ -413,6 +414,64 @@ function WeeklyOptions({
         </div>
     )
 }
+
+function Reminder() {
+    const { darkModeObject, openTimePickerObject } = useGlobalContextProvider();
+    const { setOpenTimePickerWindow } = openTimePickerObject
+
+    const { isDarkMode } = darkModeObject;
+    const [isOn, setIsOn] = useState(false);
+
+    function updateToggle() {
+        setIsOn(!isOn);
+    }
+    function openTheTimerPicker() {
+        setOpenTimePickerWindow(true);
+    }
+
+    return (
+        <div className="flex flex-col gap-2 mt-10 px-3">
+            <div className="flex justify-between">
+                <span className="font-semibold text-[17px]">
+                    Daily Notification
+                </span>
+                <ToggleSwitch />
+            </div>
+            {isOn && (
+                <div
+                    style={{
+                        backgroundColor: !isDarkMode ? defaultColor[100] : defaultColor[50],
+                        color: !isDarkMode ? defaultColor.default : darkModeColor.textColor,
+                    }}
+                    className="flex justify-between p-4 m-2 mt-8 rounded-md"
+                >
+                    <span>Select Time</span>
+                    <div
+                        onClick={openTheTimerPicker}
+                        className="flex gap-2 items-center justify-center cursor-pointer select-none">
+                        <span>8  :  00  AM</span>
+                        <FontAwesomeIcon height={12} width={12} icon={faChevronDown} />
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+
+    function ToggleSwitch() {
+        return (
+            <div
+                className={`${isOn ? "bg-customBlue" : "bg-slate-400"} w-16 h-[30px] relative rounded-lg flex items-center cursor-pointer`}
+                onClick={updateToggle}
+            >
+                <div
+                    className={`bg-white h-6 w-6 rounded-full absolute transition-transform duration-300 ${isOn ? "translate-x-10" : "translate-x-0"}`}
+                ></div>
+            </div>
+        );
+    }
+}
+
+
 
 function SaveButton({ habit }: { habit: HabitType }) {
     return (
