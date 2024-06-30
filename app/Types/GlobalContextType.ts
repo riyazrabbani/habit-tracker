@@ -1,7 +1,7 @@
 import { DarkModeItem } from "./DarkModeTypes"
 import { menuItemType } from './MenuItemType'
 import { Dispatch, SetStateAction } from "react"
-import { AreaType } from "./GlobalTypes";
+import { AreaType, HabitType } from "./GlobalTypes";
 
 export type GlobalContextType = {
     menuItemsObject: {
@@ -25,5 +25,18 @@ export type GlobalContextType = {
     allAreasObject: {
         allAreas: AreaType[];
         setAllAreas: Dispatch<SetStateAction<AreaType[]>>;
+    };
+    allHabitsObject: {
+        allHabits: HabitType[];
+        setAllHabits: Dispatch<SetStateAction<HabitType[]>>;
+    };
+    selectedCurrentDayObject: {
+        selectedCurrentDate: string;
+        setSelectedCurrentDate: Dispatch<SetStateAction<string>>;
+    };
+    offsetDayObject: {
+        offsetDay: number,
+        setOffsetDay: Dispatch<SetStateAction<number>>
     }
+
 };

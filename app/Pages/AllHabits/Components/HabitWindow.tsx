@@ -10,6 +10,8 @@ import IconsWindow from "./IconsWindow/IconsWindow";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import HabitWindowAreas from "./HabitWindow/HabitWindowAreas"
 import { AreaType } from "@/app/Types/GlobalTypes";
+import  addNewHabit from "@/app/utils/allHabitsUtils/addNewHabit"
+import toast from "react-hot-toast"
 
 type FrequencyType = {
     type: string;
@@ -46,7 +48,7 @@ function HabitWindow() {
     const [habitItem, setHabitItem] = useState<HabitType>({
         _id: "",
         name: "",
-        icon: faChevronDown,
+        icon: faStar,
         frequency: [{ type: "Daily", days: ["M"], number: 1 }],
         areas: []
     });
@@ -60,11 +62,11 @@ function HabitWindow() {
     };
 
     function getSelectedAreaItems(selectedAreaItems: AreaType[]) {
-        const copyHabitsItem = {... habitItem };
+        const copyHabitsItem = { ...habitItem };
 
         copyHabitsItem.areas = selectedAreaItems;
         setHabitItem(copyHabitsItem);
-    } 
+    }
 
     function changeRepeatOption(repeatOptions: RepeatOption[]) {
         const filterIsSelected = repeatOptions.filter(
@@ -128,7 +130,7 @@ function HabitWindow() {
                 iconSelected={iconSelected}
             />
             <Repeat onChangeOption={changeRepeatOption} onChangeDaysOption={changeDaysOption} onChangeWeeksOption={changeWeeksOption} />
-            <HabitWindowAreas onChange = {getSelectedAreaItems} />
+            <HabitWindowAreas onChange={getSelectedAreaItems} />
             <SaveButton habit={habitItem} />
         </div>
     )
@@ -428,9 +430,31 @@ function WeeklyOption({
 
 
 function SaveButton({ habit }: { habit: HabitType }) {
+    const { allHabitsObject, habitWindowObject } = useGlobalContextProvider();
+    const { allHabits, setAllHabits } = allHabitsObject;
+    const { setOpenHabitWindow } = habitWindowObject;
+
+    function checkNewHabitObject() {
+        if (habit.name.trim() === "") {
+            return toast.error("The habit name field is still empty!")
+        }
+        const habitExist = allHabits.some(
+            (singleHabit) => singleHabit.name === habit.name
+        );
+
+        if (!habitExist) {
+            addNewHabit({ allHabits, setAllHabits, newHabit: habit });
+            setOpenHabitWindow(false);
+        }
+        else {
+            toast.error("This habit has already been added.");
+        }
+    }
+
     return (
         <div className="w-full flex justify-center mt-9">
             <button
+                onClick={checkNewHabitObject}
                 className="bg-customBlue p-4 w-[98%] rounded-md text-white"
             >
                 Add a Habit
@@ -438,3 +462,4 @@ function SaveButton({ habit }: { habit: HabitType }) {
         </div>
     )
 }
+

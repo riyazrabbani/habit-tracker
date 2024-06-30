@@ -82,8 +82,6 @@ export default function MultipleSelectChip({
         onChange(selectedAreasItems);
     }, [selectedAreasItems])
 
-    //need to add validation to habit form
-
     return (
         <div>
             <FormControl

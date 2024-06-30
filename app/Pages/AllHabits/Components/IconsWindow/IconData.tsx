@@ -1,6 +1,6 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-import { 
+import {
     faCalculator,
     faFlask,
     faGlobe,
@@ -31,6 +31,7 @@ import {
     faCar,
     faFaceMeh,
     faFaceGrinStars,
+    faStar,
 } from "@fortawesome/free-solid-svg-icons"
 
 type iconData = {
@@ -160,3 +161,72 @@ export const iconsData: iconData[] = [
         isSelected: false,
     },
 ];
+
+export function textToIcon(iconText: string): IconProp | string {
+    switch (iconText) {
+        case "faCalculator":
+            return faCalculator;
+        case "faFlask":
+            return faFlask;
+        case "faGlobe":
+            return faGlobe;
+        case "faBook":
+            return faBook;
+        case "faDumbbell":
+            return faDumbbell;
+        case "faLaptopCode":
+            return faLaptopCode;
+        case "faBookMedical":
+            return faBookMedical;
+        case "faPalette":
+            return faPalette;
+        case "faComments":
+            return faComments;
+        case "faPhoneAlt":
+            return faPhoneAlt;
+        case "faEnvelope":
+            return faEnvelope;
+        case "faSearch":
+            return faSearch;
+        case "faMusic":
+            return faMusic;
+        case "faCamera":
+            return faCamera;
+        case "faQuestion":
+            return faQuestion;
+        case "faCogs":
+            return faCogs;
+        case "faUser":
+            return faUser;
+        case "faGraduationCap":
+            return faGraduationCap;
+        case "faUsers":
+            return faUsers;
+        case "faMoneyBill":
+            return faMoneyBill;
+        case "faBriefcase":
+            return faBriefcase;
+        case "faTools":
+            return faTools;
+        case "faLightbulb":
+            return faLightbulb;
+        case "faPlaneDeparture":
+            return faPlaneDeparture;
+        case "faBasketShopping":
+            return faBasketShopping;
+        case "faPersonWalking":
+            return faPersonWalking;
+        case "faBasketball":
+            return faBasketball;
+        case "faCar":
+            return faCar;
+        case "faFaceMeh":
+            return faFaceMeh;
+        case "faFaceGrinStars":
+            return faFaceGrinStars;
+        case "faStar":
+            return faStar;
+        default:
+            return faStar;
+    }
+}
