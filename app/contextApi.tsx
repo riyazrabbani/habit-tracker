@@ -11,9 +11,12 @@ import {
     faList,
     faRectangleList,
     faSun,
-    faMoon
+    faMoon,
+    faUsers,
+    faGraduationCap
 } from "@fortawesome/free-solid-svg-icons"
 import { DarkModeItem } from "./Types/DarkModeTypes"
+import { AreaType } from "./Types/GlobalTypes"
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemsObject: {
@@ -34,10 +37,10 @@ const GlobalContext = createContext<GlobalContextType>({
         openHabitWindow: false,
         setOpenHabitWindow: () => { },
     },
-    openTimePickerObject: {
-        openTimePickerWindow: false,
-        setOpenTimePickerWindow: () => { },
-    }
+    allAreasObject: {
+        allAreas: [],
+        setAllAreas: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -51,12 +54,19 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { id: 1, icon: faSun, isSelected: true },
         { id: 2, icon: faMoon, isSelected: false },
 
-    ])
+    ]);
+
+    const [allAreas, setAllAreas] = useState<AreaType[]>([
+        {id: 1, icon: faUsers, name: "All"},
+        {id: 2, icon: faGraduationCap, name: "Study"},
+        {id: 3, icon: faSun, name: "Exercise"},
+
+    ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
     const [openHabitWindow, setOpenHabitWindow] = useState<boolean>(false);
-    const [openTimePickerWindow, setOpenTimePickerWindow] = useState<boolean>(false);
+
     return (
         <GlobalContext.Provider
             value={{
@@ -72,9 +82,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                     openHabitWindow,
                     setOpenHabitWindow,
                 },
-                openTimePickerObject: {
-                    openTimePickerWindow,
-                    setOpenTimePickerWindow,
+                allAreasObject: {
+                    allAreas,
+                    setAllAreas,
                 }
             }}
         >

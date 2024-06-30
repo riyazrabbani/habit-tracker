@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { memo, useRef, useEffect, useState } from "react";
 import IconsWindow from "./IconsWindow/IconsWindow";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import HabitWindowAreas from "./HabitWindow/HabitWindowAreas"
+import { AreaType } from "@/app/Types/GlobalTypes";
 
 type FrequencyType = {
     type: string;
@@ -20,6 +22,7 @@ type HabitType = {
     name: string;
     icon: IconProp;
     frequency: FrequencyType[]
+    areas: AreaType[]
 }
 
 type RepeatOption = {
@@ -45,6 +48,7 @@ function HabitWindow() {
         name: "",
         icon: faChevronDown,
         frequency: [{ type: "Daily", days: ["M"], number: 1 }],
+        areas: []
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -54,6 +58,13 @@ function HabitWindow() {
         copyHabitItem.name = inputText;
         setHabitItem(copyHabitItem);
     };
+
+    function getSelectedAreaItems(selectedAreaItems: AreaType[]) {
+        const copyHabitsItem = {... habitItem };
+
+        copyHabitsItem.areas = selectedAreaItems;
+        setHabitItem(copyHabitsItem);
+    } 
 
     function changeRepeatOption(repeatOptions: RepeatOption[]) {
         const filterIsSelected = repeatOptions.filter(
@@ -117,8 +128,8 @@ function HabitWindow() {
                 iconSelected={iconSelected}
             />
             <Repeat onChangeOption={changeRepeatOption} onChangeDaysOption={changeDaysOption} onChangeWeeksOption={changeWeeksOption} />
+            <HabitWindowAreas onChange = {getSelectedAreaItems} />
             <SaveButton habit={habitItem} />
-            <Reminder/>
         </div>
     )
 }
@@ -414,63 +425,6 @@ function WeeklyOption({
         </div>
     )
 }
-
-function Reminder() {
-    const { darkModeObject, openTimePickerObject } = useGlobalContextProvider();
-    const { setOpenTimePickerWindow } = openTimePickerObject
-
-    const { isDarkMode } = darkModeObject;
-    const [isOn, setIsOn] = useState(false);
-
-    function updateToggle() {
-        setIsOn(!isOn);
-    }
-    function openTheTimerPicker() {
-        setOpenTimePickerWindow(true);
-    }
-
-    return (
-        <div className="flex flex-col gap-2 mt-10 px-3">
-            <div className="flex justify-between">
-                <span className="font-semibold text-[17px]">
-                    Daily Notification
-                </span>
-                <ToggleSwitch />
-            </div>
-            {isOn && (
-                <div
-                    style={{
-                        backgroundColor: !isDarkMode ? defaultColor[100] : defaultColor[50],
-                        color: !isDarkMode ? defaultColor.default : darkModeColor.textColor,
-                    }}
-                    className="flex justify-between p-4 m-2 mt-8 rounded-md"
-                >
-                    <span>Select Time</span>
-                    <div
-                        onClick={openTheTimerPicker}
-                        className="flex gap-2 items-center justify-center cursor-pointer select-none">
-                        <span>8  :  00  AM</span>
-                        <FontAwesomeIcon height={12} width={12} icon={faChevronDown} />
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-
-    function ToggleSwitch() {
-        return (
-            <div
-                className={`${isOn ? "bg-customBlue" : "bg-slate-400"} w-16 h-[30px] relative rounded-lg flex items-center cursor-pointer`}
-                onClick={updateToggle}
-            >
-                <div
-                    className={`bg-white h-6 w-6 rounded-full absolute transition-transform duration-300 ${isOn ? "translate-x-10" : "translate-x-0"}`}
-                ></div>
-            </div>
-        );
-    }
-}
-
 
 
 function SaveButton({ habit }: { habit: HabitType }) {

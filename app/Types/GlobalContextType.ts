@@ -1,6 +1,7 @@
 import { DarkModeItem } from "./DarkModeTypes"
 import { menuItemType } from './MenuItemType'
 import { Dispatch, SetStateAction } from "react"
+import { AreaType } from "./GlobalTypes";
 
 export type GlobalContextType = {
     menuItemsObject: {
@@ -20,9 +21,9 @@ export type GlobalContextType = {
     habitWindowObject: {
         openHabitWindow: boolean;
         setOpenHabitWindow: Dispatch<SetStateAction<boolean>>;
-    }
-    openTimePickerObject: {
-        openTimePickerWindow: boolean,
-        setOpenTimePickerWindow: Dispatch<SetStateAction<boolean>>;
+    };
+    allAreasObject: {
+        allAreas: AreaType[];
+        setAllAreas: Dispatch<SetStateAction<AreaType[]>>;
     }
 };
