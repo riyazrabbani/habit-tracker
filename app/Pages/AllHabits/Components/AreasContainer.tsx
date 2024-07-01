@@ -3,10 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { useGlobalContextProvider } from "@/app/contextApi";
 import { AreaType } from "@/app/Types/GlobalTypes";
+import { darkModeColor, defaultColor } from "@/colors";
 
 export default function AreasContainer() {
-    const { allAreasObject } = useGlobalContextProvider();
+    const { allAreasObject, darkModeObject, selectedAreaStringObject } = useGlobalContextProvider();
     const { allAreas } = allAreasObject;
+    const { isDarkMode } = darkModeObject;
+    const { setSelectedAreaString } = selectedAreaStringObject;
 
     const [selectedAreas, setSelectedAreas] = useState<{
         [key: number]: boolean;
@@ -20,6 +23,8 @@ export default function AreasContainer() {
         });
 
         selectedAreasCopy[index] = true;
+
+        setSelectedAreaString(allAreas[index].name);
 
         setSelectedAreas(selectedAreasCopy);
     };
@@ -59,11 +64,11 @@ export default function AreasContainer() {
 
         return (
             <div
-                className = {` p-2 px-3 rounded-md flex gap-1 items-center cursor-pointer ${
+                className={` p-2 px-3 rounded-md flex gap-1 items-center cursor-pointer ${
                     isSelected ? "bg-customBlue text-white" : "text-gray-400"
-                }`}
+                    }`}
             >
-                <FontAwesomeIcon icon = {singleArea.icon} />
+                <FontAwesomeIcon icon={singleArea.icon} />
                 <span>{singleArea.name}</span>
             </div>
         );

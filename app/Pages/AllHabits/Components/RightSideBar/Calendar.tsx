@@ -37,7 +37,6 @@ function Calendar() {
             <DateCalendar
                 onChange={handleOnChangeDate}
                 value={value}
-
                 sx={{
                     "& .MuiPickersDay-root": {
                         color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,

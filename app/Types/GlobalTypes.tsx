@@ -1,9 +1,9 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
 
 export type AreaType = {
-    id: number;
+    _id: number;
     icon: IconProp;
-    name: string
+    name: string;
 }
 
 type FrequencyType = {
@@ -18,4 +18,11 @@ export type HabitType = {
     icon: IconProp;
     frequency: FrequencyType[];
     areas: AreaType[];
+    completedDays: completedDays[];
+}
+
+
+type completedDays = {
+    _id: string,
+    date: string,
 }

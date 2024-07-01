@@ -1,22 +1,50 @@
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Checkbox, IconButton } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useGlobalContextProvider } from "@/app/contextApi";
 import { darkModeColor, defaultColor } from "@/colors"
-import { HabitType } from "@/app/Types/GlobalTypes";
+import { AreaType, HabitType } from "@/app/Types/GlobalTypes";
+import { getCurrentDayName } from "@/app/utils/allHabitsUtils/DateFunctions";
 
 export default function HabitsContainerMiddle() {
-    const { allHabitsObject } = useGlobalContextProvider();
+    const { allHabitsObject, selectedCurrentDayObject, selectedAreaStringObject } = useGlobalContextProvider();
     const { allHabits } = allHabitsObject;
+    const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
+    const { selectedCurrentDate } = selectedCurrentDayObject;
+    const { selectedAreaString } = selectedAreaStringObject;
+
+    useEffect(() => {
+        const getTwoFirstDayLetter = getCurrentDayName(selectedCurrentDate).slice(
+            0,
+            2
+        );
+
+        let filteredHabitsByArea: HabitType[] = [];
+        const filteredHabitsByFrequency = allHabits.filter((singleHabit) => {
+            return singleHabit.frequency[0].days.some(
+                (day) => day === getTwoFirstDayLetter
+            );
+        });
+
+        if (selectedAreaString !== "All") {
+            filteredHabitsByArea = filteredHabitsByFrequency.filter((habit) =>
+                habit.areas.some((area) => area.name === selectedAreaString)
+            );
+        } else {
+            filteredHabitsByArea = filteredHabitsByFrequency;
+        }
+
+        setAllFilteredHabits(filteredHabitsByArea);
+    }, [selectedCurrentDate, allHabits, selectedAreaString]);
 
     return (
         <div className=" p-3">
-            {allHabits.map((singleHabit, singleHabitIndex) => (
+            {allFilteredHabits.map((singleHabit, singleHabitIndex) => (
                 <div key={singleHabitIndex}>
                     <HabitCard singleHabit={singleHabit} />
                 </div>
@@ -83,11 +111,11 @@ export default function HabitsContainerMiddle() {
                             ))}
                         </div>
                     </div>
-                </div>
-                <div className="w-10 flex items-center justify-center ">
-                    <IconButton>
-                        <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
-                    </IconButton>
+                    <div className="w-10 flex items-center justify-center ">
+                        <IconButton>
+                            <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
+                        </IconButton>
+                    </div>
                 </div>
             </div>
         );

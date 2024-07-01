@@ -13,7 +13,8 @@ import {
     faSun,
     faMoon,
     faUsers,
-    faGraduationCap
+    faGraduationCap,
+    faDumbbell
 } from "@fortawesome/free-solid-svg-icons";
 import { DarkModeItem } from "./Types/DarkModeTypes";
 import { AreaType, HabitType } from "./Types/GlobalTypes";
@@ -56,7 +57,11 @@ const GlobalContext = createContext<GlobalContextType>({
     offsetDayObject: {
         offsetDay: 0,
         setOffsetDay: () => { }
-    }
+    },
+    selectedAreaStringObject: {
+        selectedAreaString: "",
+        setSelectedAreaString: () => {},
+    },
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -75,9 +80,9 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     ]);
 
     const [allAreas, setAllAreas] = useState<AreaType[]>([
-        { id: 1, icon: faUsers, name: "All" },
-        { id: 2, icon: faGraduationCap, name: "Study" },
-        { id: 3, icon: faSun, name: "Exercise" },
+        { _id: 1, icon: faUsers, name: "All" },
+        { _id: 2, icon: faGraduationCap, name: "Study" },
+        { _id: 3, icon: faDumbbell, name: "Exercise" },
 
     ]);
 
@@ -88,18 +93,31 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         getDateString(new Date())
     );
     const [offsetDay, setOffsetDay] = useState(0);
+    const [selectedAreaString, setSelectedAreaString] = useState<string>("All");
 
     //us based date
     useEffect(() => {
         function fetchData() {
-            const allHabitsData = [
+            const allHabitsData: HabitType[] = [
                 {
                     _id: "",
-                    name: "Thanks for using this!",
-                    icon: textToIcon("faGlobe") as IconProp,
-                    frequency: [{ type: "Daily", days: ["M"], number: 1 }],
-                    areas: [],
-                    completedDays: [{ _id: "1", date: "6/30/2024" }],
+                    name: "habit 1",
+                    icon: textToIcon("faTools") as IconProp,
+                    frequency: [{ type: "Daily", days: ["Mo", "Th"], number: 1 }],
+                    areas: [
+                        { _id: 2, icon: faGraduationCap, name: "Study"},
+                        { _id: 3, icon: faDumbbell, name: "Exercise"},
+
+                    ],
+                    completedDays: [{_id: "1", date: "03/06/2024"}],
+                },
+                {
+                    _id: "",
+                    name: "habit2",
+                    icon: textToIcon("faTools") as IconProp,
+                    frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+                    areas: [{ _id: 2, icon: faGraduationCap, name: "Study"}],
+                    completedDays: [{ _id: "1", date: "03/06/2024"}]
                 },
             ];
 
@@ -143,6 +161,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 offsetDayObject: {
                     offsetDay,
                     setOffsetDay,
+                },
+                selectedAreaStringObject: {
+                    selectedAreaString,
+                    setSelectedAreaString,
                 }
             }}
         >

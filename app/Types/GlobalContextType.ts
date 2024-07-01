@@ -37,6 +37,9 @@ export type GlobalContextType = {
     offsetDayObject: {
         offsetDay: number,
         setOffsetDay: Dispatch<SetStateAction<number>>
-    }
-
+    };
+    selectedAreaStringObject: {
+        selectedAreaString: string;
+        setSelectedAreaString: Dispatch<SetStateAction<string>>;
+    };
 };

@@ -6,6 +6,8 @@ export function getDateString(currentDate: Date, daysOffset = 0) {
     const month = String(adjustedDate.getMonth() + 1).padStart(2, "0");
     const day = String(adjustedDate.getDate()).padStart(2, "0");
 
+    console.log(adjustedDate);
+
     return `${year}-${month}-${day}`;
 
 }
@@ -42,7 +44,7 @@ export function getFormattedDate(dateString: string): string {
         "September",
         "October",
         "November",
-        "December"
+        "December",
     ]
     const day = currentDate.getDate();
     const month = monthNames[currentDate.getMonth()];

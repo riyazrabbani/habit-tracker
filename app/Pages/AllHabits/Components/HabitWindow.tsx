@@ -13,6 +13,11 @@ import { AreaType } from "@/app/Types/GlobalTypes";
 import  addNewHabit from "@/app/utils/allHabitsUtils/addNewHabit"
 import toast from "react-hot-toast"
 
+type completedDays = {
+    _id: string,
+    date: string,
+}
+
 type FrequencyType = {
     type: string;
     days: string[];
@@ -25,6 +30,8 @@ type HabitType = {
     icon: IconProp;
     frequency: FrequencyType[]
     areas: AreaType[]
+    completedDays: completedDays[],
+
 }
 
 type RepeatOption = {
@@ -49,8 +56,9 @@ function HabitWindow() {
         _id: "",
         name: "",
         icon: faStar,
-        frequency: [{ type: "Daily", days: ["M"], number: 1 }],
-        areas: []
+        frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+        areas: [],
+        completedDays: [],
     });
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -106,6 +114,20 @@ function HabitWindow() {
         copyHabitItem.icon = iconSelected;
         setHabitItem(copyHabitItem);
     }, [iconSelected]);
+
+    useEffect(() => {
+        if(openHabitWindow) {
+            setHabitItem({
+                _id: "",
+                name: "",
+                icon: faStar,
+                frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+                areas: [],
+                completedDays: [],
+            });
+        }
+    }, [openHabitWindow]);
+
 
     return (
         <div
@@ -234,13 +256,13 @@ function Repeat({
     ]);
 
     const days: DayOption[] = [
-        { id: 1, name: "M", isSelected: true },
-        { id: 2, name: "T", isSelected: false },
-        { id: 3, name: "W", isSelected: false },
-        { id: 4, name: "T", isSelected: false },
-        { id: 5, name: "F", isSelected: false },
-        { id: 6, name: "S", isSelected: false },
-        { id: 7, name: "S", isSelected: false }
+        { id: 1, name: "Mo", isSelected: true },
+        { id: 2, name: "Tu", isSelected: false },
+        { id: 3, name: "We", isSelected: false },
+        { id: 4, name: "Th", isSelected: false },
+        { id: 5, name: "Fr", isSelected: false },
+        { id: 6, name: "Sa", isSelected: false },
+        { id: 7, name: "Su", isSelected: false }
 
     ];
 
