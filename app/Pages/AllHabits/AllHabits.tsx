@@ -5,6 +5,7 @@ import HabitsContainer from "./Components/HabitsContainer";
 import HabitsCompleted from "./Components/HabitsCompleted";
 import HabitWindow from "./Components/HabitWindow";
 import { Toaster } from "react-hot-toast"
+import AreasContainer from "./Components/AreasContainer"
 
 function AllHabits() {
     return (
@@ -13,6 +14,7 @@ function AllHabits() {
             <HabitWindow />
             <div className=" flex-col flex-grow m-3">
                 <AllHabitsTopbar />
+                <AreasContainer />
                 <HabitsContainer />
                 <HabitsCompleted />
             </div>
