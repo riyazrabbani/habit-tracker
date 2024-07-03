@@ -10,7 +10,7 @@ import IconsWindow from "./IconsWindow/IconsWindow";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import HabitWindowAreas from "./HabitWindow/HabitWindowAreas"
 import { AreaType } from "@/app/Types/GlobalTypes";
-import  addNewHabit from "@/app/utils/allHabitsUtils/addNewHabit"
+import addNewHabit from "@/app/utils/allHabitsUtils/addNewHabit"
 import toast from "react-hot-toast"
 
 type completedDays = {
@@ -116,7 +116,7 @@ function HabitWindow() {
     }, [iconSelected]);
 
     useEffect(() => {
-        if(openHabitWindow) {
+        if (openHabitWindow) {
             setHabitItem({
                 _id: "",
                 name: "",
@@ -342,7 +342,8 @@ function DailyOptions({
     allDays: DayOption[];
     setAllDays: React.Dispatch<React.SetStateAction<DayOption[]>>;
 }) {
-    const { darkModeObject } = useGlobalContextProvider();
+    const { darkModeObject, habitWindowObject } = useGlobalContextProvider();
+    const { openHabitWindow } = habitWindowObject;
     const { isDarkMode } = darkModeObject;
 
     function selectedDays(singleDayIndex: number) {
@@ -366,34 +367,43 @@ function DailyOptions({
         setAllDays(updatedAllDays);
     }
 
-    return (
-        <div className="mt-5 flex flex-col gap-4">
-            <span className="font-medium opacity-85">On These Days</span>
-            <div className="flex gap-3 w-full">
-                {allDays.map((singleDay, singleDayIndex) => (
-                    <span
-                        onClick={() => selectedDays(singleDayIndex)}
-                        style={{
-                            color: !singleDay.isSelected
-                                ? !isDarkMode
-                                    ? defaultColor.default
-                                    : darkModeColor.textColor : "",
-                            backgroundColor: singleDay.isSelected
+    useEffect(() => {
+        if (openHabitWindow) {
+            const updateSelectedDays = allDays.map((singleDay) => {
+                return { ...singleDay, isSelected: false };
+            });
+            setAllDays(updateSelectedDays);
+        }
+    }, [openHabitWindow]);
+
+return (
+    <div className="mt-5 flex flex-col gap-4">
+        <span className="font-medium opacity-85">On These Days</span>
+        <div className="flex gap-3 w-full">
+            {allDays.map((singleDay, singleDayIndex) => (
+                <span
+                    onClick={() => selectedDays(singleDayIndex)}
+                    style={{
+                        color: !singleDay.isSelected
+                            ? !isDarkMode
                                 ? defaultColor.default
-                                : !isDarkMode
-                                    ? defaultColor[100]
-                                    : defaultColor[50],
-                        }}
-                        key={singleDayIndex}
-                        className={`p-2 px-3 w-11 text-center  rounded-md select-none cursor-pointer ${singleDay.isSelected ? "text-white" : "text-gray-400"
-                            }`}
-                    >
-                        {singleDay.name}
-                    </span>
-                ))}
-            </div>
+                                : darkModeColor.textColor : "",
+                        backgroundColor: singleDay.isSelected
+                            ? defaultColor.default
+                            : !isDarkMode
+                                ? defaultColor[100]
+                                : defaultColor[50],
+                    }}
+                    key={singleDayIndex}
+                    className={`p-2 px-3 w-11 text-center  rounded-md select-none cursor-pointer ${singleDay.isSelected ? "text-white" : "text-gray-400"
+                        }`}
+                >
+                    {singleDay.name}
+                </span>
+            ))}
         </div>
-    )
+    </div>
+)
 }
 
 function WeeklyOption({

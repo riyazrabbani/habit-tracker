@@ -10,6 +10,8 @@ import { useGlobalContextProvider } from "@/app/contextApi";
 import { darkModeColor, defaultColor } from "@/colors"
 import { AreaType, HabitType } from "@/app/Types/GlobalTypes";
 import { getCurrentDayName } from "@/app/utils/allHabitsUtils/DateFunctions";
+import EmptyHabitsPlaceHolder from "@/app/EmptyPlaceHolders/HabitsEmptyPlaceHolder"
+const { v4: uuidv4 } = require('uuid');
 
 export default function HabitsContainerMiddle() {
     const { allHabitsObject, selectedCurrentDayObject, selectedAreaStringObject } = useGlobalContextProvider();
@@ -44,12 +46,17 @@ export default function HabitsContainerMiddle() {
 
     return (
         <div className=" p-3">
-            {allFilteredHabits.map((singleHabit, singleHabitIndex) => (
-                <div key={singleHabitIndex}>
-                    <HabitCard singleHabit={singleHabit} />
-                </div>
-            ))}
-
+            {allFilteredHabits.length === 0 ? (
+                <EmptyHabitsPlaceHolder />
+            ) : (
+                <>
+                    {allFilteredHabits.map((singleHabit, singleHabitIndex) => (
+                        <div key={singleHabitIndex}>
+                            <HabitCard singleHabit={singleHabit} />
+                        </div>
+                    ))}
+                </>
+            )}
         </div>
     );
 
@@ -57,12 +64,61 @@ export default function HabitsContainerMiddle() {
     function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
         const { darkModeObject } = useGlobalContextProvider();
         const { isDarkMode } = darkModeObject;
+        const { setAllHabits } = allHabitsObject;
+        const { selectedCurrentDate } = selectedCurrentDayObject;
+
+        const [checked, setChecked] = useState(
+            singleHabit.completedDays.some((day) => day.date === selectedCurrentDate)
+        );
+        
+        function handleClickedCheckbox(event: React.ChangeEvent<HTMLInputElement>) {
+            const checked = event.target.checked;
+            setChecked(checked);
+
+            if(checked) {
+                checkHabit();
+            } else {
+                uncheckTheHabit();
+            }
+        }
+
+        function checkHabit() {
+            const completedDay = {
+                _id: uuidv4(),
+                date: selectedCurrentDate,
+            };
+
+            const updatedHabits: HabitType = {
+                ...singleHabit,
+                completedDays: [...singleHabit.completedDays, completedDay],
+            };
+        }
+
+        function uncheckTheHabit() {
+            const updatedHabits: HabitType = {
+                ...singleHabit,
+                completedDays: singleHabit.completedDays.filter(
+                    (day) => day.date !== selectedCurrentDate
+                ),
+            };
+
+            const updateAllHabits: HabitType[] = allHabits.map((habit) => {
+                if(habit._id === updatedHabits._id) {
+                    return updatedHabits;
+                } else {
+                    return habit;
+                }
+            });
+            setAllHabits(updateAllHabits);
+        }
 
         return (
             <div className=" flex p-3 items-center justify-between ">
                 <Checkbox
                     icon={<RadioButtonUncheckedIcon />}
                     checkedIcon={<CheckCircleIcon />}
+                    checked = {checked}
+                    onChange = {handleClickedCheckbox}
                     sx={{
                         color: defaultColor.default,
                         "&.Mui-checked": {

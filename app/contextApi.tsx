@@ -4,7 +4,15 @@ import { ReactNode, createContext, useState, useContext, useEffect } from "react
 
 import { GlobalContextType } from "./Types/GlobalContextType";
 import { menuItemType } from "./Types/MenuItemType";
-import { faSlack } from "@fortawesome/free-brands-svg-icons";
+import { faSlack, faUpwork } from "@fortawesome/free-brands-svg-icons";
+import {
+    faBorderAll,
+    faBriefcase,
+    faCode,
+    faGraduationCap,
+    faSortAmountDesc,
+    faUsers,
+} from "@fortawesome/free-solid-svg-icons"
 import {
     faChartSimple,
     faLayerGroup,
@@ -12,8 +20,6 @@ import {
     faRectangleList,
     faSun,
     faMoon,
-    faUsers,
-    faGraduationCap,
     faDumbbell
 } from "@fortawesome/free-solid-svg-icons";
 import { DarkModeItem } from "./Types/DarkModeTypes";
@@ -22,6 +28,8 @@ import AllHabits from "./Pages/AllHabits/AllHabits";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
 import { getDateString } from "./utils/allHabitsUtils/DateFunctions";
+const { v4: uuidv4 } = require('uuid');
+//import { v4 as uuidv4 } from "uuid";
 
 const GlobalContext = createContext<GlobalContextType>({
     menuItemsObject: {
@@ -80,10 +88,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     ]);
 
     const [allAreas, setAllAreas] = useState<AreaType[]>([
-        { _id: 1, icon: faUsers, name: "All" },
-        { _id: 2, icon: faGraduationCap, name: "Study" },
-        { _id: 3, icon: faDumbbell, name: "Exercise" },
-
+        { _id: uuidv4(), icon: faBorderAll, name: "All" },
+        { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
+        { _id: uuidv4(), icon: faDumbbell, name: "Exercise" },
+        { _id: uuidv4(), icon: faBorderAll, name: "Work"},
     ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
@@ -100,24 +108,16 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         function fetchData() {
             const allHabitsData: HabitType[] = [
                 {
-                    _id: "",
-                    name: "habit 1",
-                    icon: textToIcon("faTools") as IconProp,
-                    frequency: [{ type: "Daily", days: ["Mo", "Th"], number: 1 }],
-                    areas: [
-                        { _id: 2, icon: faGraduationCap, name: "Study"},
-                        { _id: 3, icon: faDumbbell, name: "Exercise"},
-
-                    ],
-                    completedDays: [{_id: "1", date: "03/06/2024"}],
-                },
-                {
-                    _id: "",
-                    name: "habit2",
+                    _id: uuidv4(),
+                    name: "Habit 1",
                     icon: textToIcon("faTools") as IconProp,
                     frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
-                    areas: [{ _id: 2, icon: faGraduationCap, name: "Study"}],
-                    completedDays: [{ _id: "1", date: "03/06/2024"}]
+                    areas: [
+                        { _id: uuidv4(), icon: faGraduationCap, name: "Study"},
+                        { _id: uuidv4(), icon: faDumbbell, name: "Exercise"},
+
+                    ],
+                    completedDays: [{_id: uuidv4(), date: "03/06/2024"}],
                 },
             ];
 
