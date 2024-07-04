@@ -7,15 +7,24 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { defaultColor, darkModeColor } from "@/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useGlobalContextProvider } from "@/app/contextApi";
+import { HabitCard } from "./SingleHabitCard";
 
 function HabitsCompleted() {
-    const { darkModeObject } = useGlobalContextProvider();
+    const { darkModeObject, allFilteredHabitsObject, selectedCurrentDayObject } = useGlobalContextProvider();
+    const { selectedCurrentDate } = selectedCurrentDayObject;
     const { isDarkMode } = darkModeObject;
+    const { allFilteredHabits } = allFilteredHabitsObject;
+
+    const areAllHabitsNotCompleted = allFilteredHabits.every((singleHabit) => {
+        return !singleHabit.completedDays.some(
+            (day) => day.date === selectedCurrentDate
+        );
+    });
 
     return (
         <div
             style={{
-                color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,
+                color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor50,
                 backgroundColor: isDarkMode
                     ? darkModeColor.background
                     : defaultColor.background,
@@ -23,8 +32,19 @@ function HabitsCompleted() {
             className="mt-7 p-8 rounded-md">
             <span className="font-bold text-lg mb-2">Habits Completed</span>
             <div className="mt-7 opacity-50">
-                <HabitCard />
-                <HabitCard />
+                <div className="mt-10 w-full flex justify-center">
+                    {areAllHabitsNotCompleted && (
+                        <p className="text-sm  w-72 text-center">{`Habit stacking is like a superpower! Don't let it go to waste!`}</p>
+                    )}
+                </div>
+
+                {allFilteredHabits.map((singleHabit, index) => (
+                    <div key={index}>
+                        {singleHabit.completedDays.some(
+                            (day) => day.date === selectedCurrentDate
+                        ) === true && <HabitCard singleHabit={singleHabit} />}
+                    </div>
+                ))}
             </div>
         </div>
     )
@@ -32,13 +52,8 @@ function HabitsCompleted() {
 
 export default HabitsCompleted;
 
-function HabitCard() {
-
-    const { darkModeObject } = useGlobalContextProvider();
-    const { isDarkMode } = darkModeObject;
-
-    return (
-        <div className=" flex p-3 items-center justify-between ">
+/*
+  <div className=" flex p-3 items-center justify-between ">
             <Checkbox
                 icon={<RadioButtonUncheckedIcon />}
                 checkedIcon={<CheckCircleIcon />}
@@ -102,6 +117,4 @@ function HabitCard() {
                 </div>
             </div>
         </div>
-
-    );
-}
+        */

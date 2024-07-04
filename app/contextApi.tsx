@@ -70,6 +70,10 @@ const GlobalContext = createContext<GlobalContextType>({
         selectedAreaString: "",
         setSelectedAreaString: () => {},
     },
+    allFilteredHabitsObject: {
+        allFilteredHabits: [],
+        setAllFilteredHabits: () => {},
+    }
 });
 
 function GlobalContextProvider({ children }: { children: ReactNode }) {
@@ -102,6 +106,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     );
     const [offsetDay, setOffsetDay] = useState(0);
     const [selectedAreaString, setSelectedAreaString] = useState<string>("All");
+    const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
 
     //us based date
     useEffect(() => {
@@ -165,7 +170,11 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 selectedAreaStringObject: {
                     selectedAreaString,
                     setSelectedAreaString,
-                }
+                },
+                allFilteredHabitsObject: {
+                    allFilteredHabits,
+                    setAllFilteredHabits,
+                },
             }}
         >
             {children}

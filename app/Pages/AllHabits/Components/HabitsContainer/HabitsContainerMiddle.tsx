@@ -4,19 +4,22 @@ import { Checkbox, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useGlobalContextProvider } from "@/app/contextApi";
 import { darkModeColor, defaultColor } from "@/colors"
 import { AreaType, HabitType } from "@/app/Types/GlobalTypes";
 import { getCurrentDayName } from "@/app/utils/allHabitsUtils/DateFunctions";
 import EmptyHabitsPlaceHolder from "@/app/EmptyPlaceHolders/HabitsEmptyPlaceHolder"
+import { HabitCard } from "../SingleHabitCard";
+import WellDonePlaceHolder from "@/app/EmptyPlaceHolders/HabitsEmptyPlaceHolder";
+import { SuccessIcon } from "@/app/Assets/SuccessIcon"
 const { v4: uuidv4 } = require('uuid');
 
+
 export default function HabitsContainerMiddle() {
-    const { allHabitsObject, selectedCurrentDayObject, selectedAreaStringObject } = useGlobalContextProvider();
+    const { allHabitsObject, selectedCurrentDayObject, selectedAreaStringObject, allFilteredHabitsObject } = useGlobalContextProvider();
     const { allHabits } = allHabitsObject;
-    const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
+    const { allFilteredHabits, setAllFilteredHabits } = allFilteredHabitsObject;
     const { selectedCurrentDate } = selectedCurrentDayObject;
     const { selectedAreaString } = selectedAreaStringObject;
 
@@ -44,136 +47,38 @@ export default function HabitsContainerMiddle() {
         setAllFilteredHabits(filteredHabitsByArea);
     }, [selectedCurrentDate, allHabits, selectedAreaString]);
 
+    const isAllHabitsCompleted =
+        allFilteredHabits.length > 0 &&
+        allFilteredHabits.every((habit) => {
+            return habit.completedDays.some(
+                (day) => day.date === selectedCurrentDate
+            );
+        });
+
     return (
         <div className=" p-3">
             {allFilteredHabits.length === 0 ? (
                 <EmptyHabitsPlaceHolder />
             ) : (
                 <>
+                    {isAllHabitsCompleted && (
+                        <div className="flex justify-center items-center p-5 flex-col">
+                            <SuccessIcon color={defaultColor.textColor50} />
+                            <span className="text-[13px] text-gray-400 w-64 text-center mt-6">
+                                {`Great job! You've completed all your habits for today! ⭐`}
+                            </span>
+                        </div>
+                    )}
+
                     {allFilteredHabits.map((singleHabit, singleHabitIndex) => (
                         <div key={singleHabitIndex}>
-                            <HabitCard singleHabit={singleHabit} />
+                            {singleHabit.completedDays.some(
+                                (day) => day.date === selectedCurrentDate
+                            ) === false && <HabitCard singleHabit={singleHabit} />}
                         </div>
                     ))}
                 </>
             )}
         </div>
     );
-
-
-    function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
-        const { darkModeObject } = useGlobalContextProvider();
-        const { isDarkMode } = darkModeObject;
-        const { setAllHabits } = allHabitsObject;
-        const { selectedCurrentDate } = selectedCurrentDayObject;
-
-        const [checked, setChecked] = useState(
-            singleHabit.completedDays.some((day) => day.date === selectedCurrentDate)
-        );
-        
-        function handleClickedCheckbox(event: React.ChangeEvent<HTMLInputElement>) {
-            const checked = event.target.checked;
-            setChecked(checked);
-
-            if(checked) {
-                checkHabit();
-            } else {
-                uncheckTheHabit();
-            }
-        }
-
-        function checkHabit() {
-            const completedDay = {
-                _id: uuidv4(),
-                date: selectedCurrentDate,
-            };
-
-            const updatedHabits: HabitType = {
-                ...singleHabit,
-                completedDays: [...singleHabit.completedDays, completedDay],
-            };
-        }
-
-        function uncheckTheHabit() {
-            const updatedHabits: HabitType = {
-                ...singleHabit,
-                completedDays: singleHabit.completedDays.filter(
-                    (day) => day.date !== selectedCurrentDate
-                ),
-            };
-
-            const updateAllHabits: HabitType[] = allHabits.map((habit) => {
-                if(habit._id === updatedHabits._id) {
-                    return updatedHabits;
-                } else {
-                    return habit;
-                }
-            });
-            setAllHabits(updateAllHabits);
-        }
-
-        return (
-            <div className=" flex p-3 items-center justify-between ">
-                <Checkbox
-                    icon={<RadioButtonUncheckedIcon />}
-                    checkedIcon={<CheckCircleIcon />}
-                    checked = {checked}
-                    onChange = {handleClickedCheckbox}
-                    sx={{
-                        color: defaultColor.default,
-                        "&.Mui-checked": {
-                            color: defaultColor.default,
-                        },
-                    }}
-                />
-                <div
-                    style={{
-                        backgroundColor: isDarkMode
-                            ? darkModeColor.backgroundSlate
-                            : defaultColor.backgroundSlate,
-                    }}
-                    className=" flex justify-between gap-2 w-full p-3 py-4 rounded-md "
-                >
-                    <div className=" w-full ">
-
-                        <div className=" flex gap-2 justify-between ">
-                            <div className=" flex gap-2 items-center">
-                                <FontAwesomeIcon
-                                    className=" p-3 rounded-full w-4 h-4 bg-customBlue text-white"
-                                    height={20}
-                                    width={20}
-                                    icon={singleHabit.icon}
-                                />
-                                <span className="">{singleHabit.name}</span>
-                            </div>
-                        </div>
-
-                        <div className=" flex gap-2 mt-3 ">
-                            {singleHabit.areas.map((singleArea, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        color: isDarkMode
-                                            ? darkModeColor.textColor
-                                            : defaultColor.default,
-                                        backgroundColor: isDarkMode
-                                            ? defaultColor[50]
-                                            : defaultColor[100],
-                                    }}
-                                    className=" p-1 text-[12px] rounded-md px-2"
-                                >
-                                    <span className="">{singleArea.name}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="w-10 flex items-center justify-center ">
-                        <IconButton>
-                            <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
-                        </IconButton>
-                    </div>
-                </div>
-            </div>
-        );
-    }
 }

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { faCode, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconButton } from "@mui/material"
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import { useGlobalContextProvider } from "@/app/contextApi";
@@ -10,7 +9,6 @@ import {
     getDateString,
     getFormattedDate
 } from "@/app/utils/allHabitsUtils/DateFunctions"
-
 
 export default function HabitsContainerTop() {
     const { habitWindowObject, selectedCurrentDayObject, offsetDayObject } = useGlobalContextProvider();
@@ -29,17 +27,17 @@ export default function HabitsContainerTop() {
     }
 
     useEffect(() => {
-        setSelectedCurrentDate(getDateString(new Date(), offsetDay));
-    }, [offsetDay]);
-
+        const newDate = new Date();
+        newDate.setDate(newDate.getDate() + offsetDay);
+        setSelectedCurrentDate(getDateString(newDate));
+    }, [offsetDay, setSelectedCurrentDate]);
 
     return (
         <div className="p-3 flex justify-between items-center ">
             <div className="flex gap-4 items-center">
                 <div>
-                    <h2 className="font-bold text-lg w-28 ">
+                    <h2 className="font-bold text-lg w-28">
                         {getCurrentDayName(selectedCurrentDate)}
-
                     </h2>
                     <span className="font-light text-[12px]">
                         {getFormattedDate(selectedCurrentDate)}
@@ -58,7 +56,6 @@ export default function HabitsContainerTop() {
                         <ArrowCircleRightOutlinedIcon />
                     </div>
                 </div>
-
             </div>
             <button
                 onClick={() => setOpenHabitWindow(true)}
