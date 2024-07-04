@@ -68,11 +68,26 @@ const GlobalContext = createContext<GlobalContextType>({
     },
     selectedAreaStringObject: {
         selectedAreaString: "",
-        setSelectedAreaString: () => {},
+        setSelectedAreaString: () => { },
     },
     allFilteredHabitsObject: {
         allFilteredHabits: [],
-        setAllFilteredHabits: () => {},
+        setAllFilteredHabits: () => { },
+    },
+    openDropDownObject: {
+        openDropDown: false,
+        setOpenDropDown: () => { },
+    },
+    dropDownPositionsObject: {
+        dropDownPositions: {
+            top: 0,
+            left: 0,
+        },
+        setDropDownPositions: () => { },
+    },
+    openConfirmationWindowObject: {
+        openConfirmationWindow: false,
+        setOpenConfirmationWindow: () => {},
     }
 });
 
@@ -95,7 +110,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         { _id: uuidv4(), icon: faBorderAll, name: "All" },
         { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
         { _id: uuidv4(), icon: faDumbbell, name: "Exercise" },
-        { _id: uuidv4(), icon: faBorderAll, name: "Work"},
+        { _id: uuidv4(), icon: faBriefcase, name: "Work" },
     ]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
@@ -107,6 +122,13 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [offsetDay, setOffsetDay] = useState(0);
     const [selectedAreaString, setSelectedAreaString] = useState<string>("All");
     const [allFilteredHabits, setAllFilteredHabits] = useState<HabitType[]>([]);
+    const [openDropDown, setOpenDropDown] = useState(false);
+    const [dropDownPositions, setDropDownPositions] = useState({
+        top: 0,
+        left: 0,
+    });
+
+    const [ openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
 
     //us based date
     useEffect(() => {
@@ -118,11 +140,13 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                     icon: textToIcon("faTools") as IconProp,
                     frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
                     areas: [
-                        { _id: uuidv4(), icon: faGraduationCap, name: "Study"},
-                        { _id: uuidv4(), icon: faDumbbell, name: "Exercise"},
+                        { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
+                        { _id: uuidv4(), icon: faDumbbell, name: "Exercise" },
 
                     ],
-                    completedDays: [{_id: uuidv4(), date: "03/06/2024"}],
+                    completedDays: [
+                        { _id: uuidv4(), date: "03/06/2024" }
+                    ],
                 },
             ];
 
@@ -175,6 +199,18 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                     allFilteredHabits,
                     setAllFilteredHabits,
                 },
+                openDropDownObject: {
+                    openDropDown,
+                    setOpenDropDown,
+                },
+                dropDownPositionsObject: {
+                    dropDownPositions,
+                    setDropDownPositions,
+                },
+                openConfirmationWindowObject: {
+                    openConfirmationWindow,
+                    setOpenConfirmationWindow,
+                }
             }}
         >
             {children}

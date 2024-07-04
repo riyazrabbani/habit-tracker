@@ -1,6 +1,6 @@
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Checkbox, IconButton } from "@mui/material";
+import { Checkbox, Icon, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -15,10 +15,12 @@ const { v4: uuidv4 } = require('uuid');
 
 
 export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
-    const { darkModeObject, allHabitsObject, selectedCurrentDayObject } = useGlobalContextProvider();
+    const { darkModeObject, allHabitsObject, selectedCurrentDayObject, openDropDownObject, dropDownPositionsObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const { allHabits, setAllHabits } = allHabitsObject;
     const { selectedCurrentDate } = selectedCurrentDayObject;
+    const { setOpenDropDown } = openDropDownObject;
+    const {setDropDownPositions } = dropDownPositionsObject;
 
     const [checked, setChecked] = useState(
         singleHabit.completedDays.some((day) => day.date === selectedCurrentDate)
@@ -77,12 +79,23 @@ export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
         setAllHabits(updateAllHabits);
     }
 
+    function handleClickThreeDots(event: React.MouseEvent<HTMLButtonElement>) {
+        const target = event.target as HTMLElement;
+        const rect = target.getBoundingClientRect();
+        const top = rect.top;
+        const left = rect.left;
+        setDropDownPositions({top, left});
+
+        event.stopPropagation();
+        setOpenDropDown(true);
+    }
+
     useEffect(() => {
         const isCompleted = singleHabit.completedDays.some(
             (day) => day.date === selectedCurrentDate
         );
         setChecked(isCompleted);
-    }, [singleHabit, selectedCurrentDate, allHabits])
+    }, [singleHabit, selectedCurrentDate, allHabits]);
 
     return (
         <div className=" flex p-3 items-center justify-between ">
@@ -109,7 +122,7 @@ export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
                 <div className=" w-full ">
 
                     <div className=" flex gap-2 justify-between ">
-                        <div className=" flex gap-2 items-center">
+                        <div className=" flex gap-2 items-center ">
                             <FontAwesomeIcon
                                 className=" p-3 rounded-full w-4 h-4 bg-customBlue text-white"
                                 height={20}
@@ -140,7 +153,7 @@ export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
                     </div>
                 </div>
                 <div className="w-10 flex items-center justify-center ">
-                    <IconButton>
+                    <IconButton onClick = {handleClickThreeDots}> 
                         <MoreVertIcon sx={{ color: isDarkMode ? "white" : "gray" }} />
                     </IconButton>
                 </div>

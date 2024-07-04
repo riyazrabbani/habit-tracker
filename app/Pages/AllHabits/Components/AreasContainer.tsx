@@ -41,8 +41,14 @@ export default function AreasContainer() {
         setSelectedAreas(initialSelectedArea);
     }, [allAreas]);
 
+    //fix dark mode here
     return (
-        <div className="p-5 bg-white rounded-md flex gap-3 items-center transition-all mt-5 text-sm">
+        <div 
+        style = {{
+            color: isDarkMode ? darkModeColor.textColor : defaultColor.textColor,
+            backgroundColor: isDarkMode ? darkModeColor.background : defaultColor.background,
+        }}
+        className="p-5 rounded-md flex gap-3 items-center transition-all mt-5 text-sm">
             {allAreas.map((area: AreaType, index) => (
                 <div onClick={() => toggleSelection(index)} key={index}>
                     <SingleAreaContainer

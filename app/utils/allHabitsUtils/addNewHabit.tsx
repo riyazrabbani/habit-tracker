@@ -13,7 +13,7 @@ export default function addNewHabit({
 }) {
     try {
         setAllHabits([...allHabits, newHabit]);
-        toast.success("Habit add successfully!");
+        toast.success("Habit added successfully!");
     } catch (error) {
         toast.error("Something went wrong!...")
     }
