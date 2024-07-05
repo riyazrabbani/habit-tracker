@@ -28,3 +28,7 @@ export function editHabit({
         toast.error("Something went wrong")
     }
 }
+
+//  const copyAllHabits = [...allHabits];
+//deleteHabit(allHabits, setAllHabits, habit);
+//addNewHabit({allHabits, setAllHabits, habit});

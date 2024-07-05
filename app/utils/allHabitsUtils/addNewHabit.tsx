@@ -5,14 +5,14 @@ import toast from "react-hot-toast"
 export default function addNewHabit({
     allHabits,
     setAllHabits,
-    newHabit,
+    habit,
 }: {
     allHabits: HabitType[];
     setAllHabits: React.Dispatch<React.SetStateAction<HabitType[]>>;
-    newHabit: HabitType;
+    habit: HabitType;
 }) {
     try {
-        setAllHabits([...allHabits, newHabit]);
+        setAllHabits([...allHabits, habit]);
         toast.success("Habit added successfully!");
     } catch (error) {
         toast.error("Something went wrong!...")

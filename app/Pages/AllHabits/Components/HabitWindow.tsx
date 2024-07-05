@@ -13,6 +13,7 @@ import { AreaType } from "@/app/Types/GlobalTypes";
 import addNewHabit from "@/app/utils/allHabitsUtils/addNewHabit"
 import toast from "react-hot-toast"
 import { editHabit } from "@/app/utils/allHabitsUtils/editHabits"
+import { deleteHabit } from "@/app/utils/allHabitsUtils/deleteHabit";
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -68,6 +69,7 @@ function HabitWindow() {
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
 
+    //test
     useEffect(() => {
         if (!openHabitWindow) {
             setHabitItem({
@@ -576,16 +578,17 @@ function SaveButton({ habit }: { habit: HabitType }) {
         }
 
         const habitExist = allHabits.some(
-            (singleHabit) => singleHabit.name === habit.name
+            //(singleHabit) => singleHabit.name=== habit.name
+            (singleHabit) => singleHabit._id === habit._id
         );
-        const newHabit = habit;
 
         if (!habitExist) {
-            addNewHabit({ allHabits, setAllHabits, newHabit});
+            addNewHabit({ allHabits, setAllHabits, habit});
             setOpenHabitWindow(false);
         }
         else {
-            editHabit({allHabits, setAllHabits, habit, selectedItems})
+            //deleteHabit(allHabits, setAllHabits, habit);
+            editHabit({allHabits, setAllHabits, habit, selectedItems});
             setOpenHabitWindow(false);
         }
         setSelectedItems(null);
