@@ -1,7 +1,7 @@
 import React from "react";
 import MultipleSelectChip from "./MultipleSelectChip";
 
-export default function HabitWindowArea({
+export default function HabitWindowAreas({
     onChange,
 }: {
     onChange: ( selectedItems: any) => void;

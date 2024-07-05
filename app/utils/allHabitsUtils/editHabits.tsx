@@ -17,11 +17,14 @@ export function editHabit({
         const currentHabitSelected = selectedItems as HabitType;
 
         const findTheHabit = allHabits.findIndex(
-            (singleHabit) => singleHabit._id === currentHabitSelected._id
+            (singleHabit) => singleHabit.name === currentHabitSelected.name
         );
 
+
         const copyAllHabits = [...allHabits];
+
         copyAllHabits[findTheHabit] = habit;
+
         setAllHabits(copyAllHabits);
         toast.success("Habit has been updated successfully");
     } catch (error) {
@@ -29,6 +32,4 @@ export function editHabit({
     }
 }
 
-//  const copyAllHabits = [...allHabits];
-//deleteHabit(allHabits, setAllHabits, habit);
-//addNewHabit({allHabits, setAllHabits, habit});
+// figure out why the name doesn't save

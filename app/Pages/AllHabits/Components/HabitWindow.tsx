@@ -69,7 +69,6 @@ function HabitWindow() {
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
 
-    //test
     useEffect(() => {
         if (!openHabitWindow) {
             setHabitItem({
@@ -85,7 +84,7 @@ function HabitWindow() {
                 setHabitItem(selectedItems as HabitType);
             }
         }
-    }, [openHabitWindow])
+    }, [openHabitWindow]);
 
     useEffect(() => {
         if (selectedItems) {
@@ -94,6 +93,7 @@ function HabitWindow() {
     }, [selectedItems])
 
 
+    //change here
     const onUpdateHabitName = (inputText: string) => {
         const copyHabitItem = { ...habitItem };
         copyHabitItem.name = inputText;
@@ -140,24 +140,28 @@ function HabitWindow() {
         setHabitItem(copyHabitsItem);
     }
 
+
+
     useEffect(() => {
         const copyHabitItem = { ...habitItem };
         copyHabitItem.icon = iconSelected;
         setHabitItem(copyHabitItem);
     }, [iconSelected]);
 
-    useEffect(() => {
-        if (openHabitWindow) {
-            setHabitItem({
-                _id: "",
-                name: "",
-                icon: faStar,
-                frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
-                areas: [],
-                completedDays: [],
-            });
-        }
-    }, [openHabitWindow]);
+
+    // this use effect was messing some things up.
+    // useEffect(() => {
+    //     if (openHabitWindow && !selectedItems) {
+    //         setHabitItem({
+    //             _id: "",
+    //             name: "",
+    //             icon: faStar,
+    //             frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+    //             areas: [],
+    //             completedDays: [],
+    //         });
+    //     }
+    // }, [openHabitWindow]);
 
 
     return (
@@ -176,13 +180,15 @@ function HabitWindow() {
                 setIconSelected={setIconSelected}
             />
             <Header />
-            <InputNameAndIconButton
-                onUpdateHabitName={onUpdateHabitName}
-                habitName={habitItem.name}
-                setOpenIconWindow={setOpenIconWindow}
-                iconSelected={iconSelected}
-                setIconSelected={setIconSelected}
-            />
+            {!selectedItems && (
+                <InputNameAndIconButton
+                    onUpdateHabitName={onUpdateHabitName}
+                    habitName={habitItem.name}
+                    setOpenIconWindow={setOpenIconWindow}
+                    iconSelected={iconSelected}
+                    setIconSelected={setIconSelected}
+                />
+            )}
             <Repeat onChangeOption={changeRepeatOption} onChangeDaysOption={changeDaysOption} onChangeWeeksOption={changeWeeksOption} />
             <HabitWindowAreas onChange={getSelectedAreaItems} />
             <SaveButton habit={habitItem} />
@@ -249,7 +255,9 @@ function InputNameAndIconButton({
 
         if (!openHabitWindow) {
             onUpdateHabitName("");
-        } else {
+        }
+        //important
+        else {
             if (selectedItems) {
                 onUpdateHabitName(selectedItems.name);
                 setIconSelected(selectedItems.icon);
@@ -360,6 +368,7 @@ function Repeat({
                 }
                 return { ...singleOption, isSelected: false };
             });
+            setNameOfSelectedOption(selectedItems.name);
 
             setRepeatOptions(copyRepeatOptions);
         } else {
@@ -578,17 +587,17 @@ function SaveButton({ habit }: { habit: HabitType }) {
         }
 
         const habitExist = allHabits.some(
-            //(singleHabit) => singleHabit.name=== habit.name
-            (singleHabit) => singleHabit._id === habit._id
+            (singleHabit) => singleHabit.name === habit.name
         );
 
         if (!habitExist) {
-            addNewHabit({ allHabits, setAllHabits, habit});
+            addNewHabit({ allHabits, setAllHabits, habit });
             setOpenHabitWindow(false);
         }
         else {
             //deleteHabit(allHabits, setAllHabits, habit);
-            editHabit({allHabits, setAllHabits, habit, selectedItems});
+            console.log("we editing");
+            editHabit({ allHabits, setAllHabits, habit, selectedItems });
             setOpenHabitWindow(false);
         }
         setSelectedItems(null);
