@@ -9,20 +9,19 @@ export type AreaType = {
 export type HabitType = {
     _id?: string;
     name: string;
-    icon: IconProp;
+    icon: any;
     clerkUserId: string;
     frequency: FrequencyType[];
     areas: AreaType[];
     completedDays: completedDays[];
 }
 
+
 type FrequencyType = {
     type: string;
     days: string[];
     number: number;
 }
-
-
 
 
 type completedDays = {

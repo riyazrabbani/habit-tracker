@@ -11,6 +11,7 @@ import { AreaType, HabitType } from "@/app/Types/GlobalTypes";
 import { getCurrentDayName } from "@/app/utils/allHabitsUtils/DateFunctions";
 import EmptyHabitsPlaceHolder from "@/app/EmptyPlaceHolders/HabitsEmptyPlaceHolder"
 import WellDonePlaceHolder from "@/app/EmptyPlaceHolders/HabitsEmptyPlaceHolder";
+import convertIconsToTextOfHabits from "@/app/utils/allHabitsUtils/editHabits";
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -49,6 +50,8 @@ export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
             completedDays: [...singleHabit.completedDays, completedDay],
         };
 
+        const habitToUpdateInTheServer = convertIconsToTextOfHabits(updatedHabits);
+        editTheHabitInServer(habitToUpdateInTheServer);
         
         const updateAllHabits: HabitType[] = allHabits.map((habit) => {
             if(habit._id === updatedHabits._id) {
@@ -163,4 +166,25 @@ export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
             </div>
         </div>
     );
+}
+
+async function editTheHabitInServer(habit: HabitType) {
+    const response = await fetch(`/api/habits?habitId=${habit._id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+            name: habit.name,
+            icon: habit.icon,
+            areas: habit.areas,
+            frequency: habit.frequency,
+            completedDays: habit.completedDays,
+        }),
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to edit habit");
+    }
 }
