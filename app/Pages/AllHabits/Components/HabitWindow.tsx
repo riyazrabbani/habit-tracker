@@ -10,11 +10,12 @@ import IconsWindow from "./IconsWindow/IconsWindow";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import HabitWindowAreas from "./HabitWindow/HabitWindowAreas"
 import { AreaType } from "@/app/Types/GlobalTypes";
-import addNewHabit from "@/app/utils/allHabitsUtils/addNewHabit"
+import { addNewHabit } from "@/app/utils/allHabitsUtils/addNewHabit"
 import toast from "react-hot-toast"
 import { editHabit } from "@/app/utils/allHabitsUtils/editHabits"
 import { deleteHabit } from "@/app/utils/allHabitsUtils/deleteHabit";
 const { v4: uuidv4 } = require('uuid');
+import { useUser } from "@clerk/nextjs";
 
 
 type completedDays = {
@@ -29,13 +30,13 @@ type FrequencyType = {
 }
 
 type HabitType = {
-    _id: string;
+    _id?: string;
     name: string;
     icon: IconProp;
-    frequency: FrequencyType[]
-    areas: AreaType[]
-    completedDays: completedDays[],
-
+    clerkUserId: string;
+    frequency: FrequencyType[];
+    areas: AreaType[];
+    completedDays: completedDays[];
 }
 
 type RepeatOption = {
@@ -56,15 +57,18 @@ function HabitWindow() {
     const { habitWindowObject, darkModeObject, selectedItemsObject } = useGlobalContextProvider();
     const { openHabitWindow } = habitWindowObject;
     const { isDarkMode } = darkModeObject;
+    const { selectedItems, setSelectedItems } = selectedItemsObject;
+    const { user } = useUser();
+    
     const [habitItem, setHabitItem] = useState<HabitType>({
         _id: "",
         name: "",
         icon: faStar,
+        clerkUserId: user?.id || "",
         frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
         areas: [],
         completedDays: [],
     });
-    const { selectedItems, setSelectedItems } = selectedItemsObject;
 
     const [openIconWindow, setOpenIconWindow] = useState<boolean>(false);
     const [iconSelected, setIconSelected] = useState<IconProp>(habitItem.icon);
@@ -72,9 +76,10 @@ function HabitWindow() {
     useEffect(() => {
         if (!openHabitWindow) {
             setHabitItem({
-                _id: uuidv4(),
+                _id: "",
                 name: "",
                 icon: faStar,
+                clerkUserId: user?.id || "",
                 frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
                 areas: [],
                 completedDays: [],

@@ -230,3 +230,102 @@ export function textToIcon(iconText: string): IconProp | string {
             return faStar;
     }
 }
+export function iconToText(icon: any): string {
+    switch (icon.iconName) {
+        case "calculator":
+            return "faCalculator";
+
+        case "flask":
+            return "faFlask";
+
+        case "globe":
+            return "faGlobe";
+
+        case "book":
+            return "faBook";
+
+        case "dumbbell":
+            return "faDumbbell";
+
+        case "laptop-code":
+            return "faLaptopCode";
+
+        case "book-medical":
+            return "faBookMedical";
+
+        case "palette":
+            return "faPalette";
+
+        case "comments":
+            return "faComments";
+
+        case "phone-alt":
+            return "faPhoneAlt";
+
+        case "envelope":
+            return "faEnvelope";
+
+        case "search":
+            return "faSearch";
+
+        case "music":
+            return "faMusic";
+
+        case "camera":
+            return "faCamera";
+
+        case "question":
+            return "faQuestion";
+
+        case "cogs":
+            return "faCogs";
+
+        case "user":
+            return "faUser";
+
+        case "graduation-cap":
+            return "faGraduationCap";
+
+        case "users":
+            return "faUsers";
+
+        case "money-bill":
+            return "faMoneyBill";
+
+        case "briefcase":
+            return "faBriefcase";
+
+        case "tools":
+            return "faTools";
+
+        case "lightbulb":
+            return "faLightbulb";
+
+        case "planeDeparture":
+            return "faPlaneDeparture";
+
+        case "basket-shopping":
+            return "faBasketShopping";
+
+        case "person-walking":
+            return "faPersonWalking";
+
+        case "basketball":
+            return "faBasketball";
+
+        case "car":
+            return "faCar";
+
+        case "faceMeh":
+            return "faFaceMeh";
+
+        case "face-grin-stars":
+            return "faFaceGrinStars";
+
+        case "star":
+            return "faStar";
+            
+        default:
+            return "faStar";
+    }
+}

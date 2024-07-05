@@ -20,7 +20,8 @@ import {
     faRectangleList,
     faSun,
     faMoon,
-    faDumbbell
+    faDumbbell,
+    faGlobe
 } from "@fortawesome/free-solid-svg-icons";
 import { DarkModeItem } from "./Types/DarkModeTypes";
 import { AreaType, HabitType } from "./Types/GlobalTypes";
@@ -29,6 +30,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { textToIcon } from "./Pages/AllHabits/Components/IconsWindow/IconData";
 import { getDateString } from "./utils/allHabitsUtils/DateFunctions";
 const { v4: uuidv4 } = require('uuid');
+import { useUser } from "@clerk/nextjs";
 //import { v4 as uuidv4 } from "uuid";
 
 const GlobalContext = createContext<GlobalContextType>({
@@ -91,7 +93,7 @@ const GlobalContext = createContext<GlobalContextType>({
     },
     selectedItemsObject: {
         selectedItems: null,
-        setSelectedItems: () => {},
+        setSelectedItems: () => { },
     }
 });
 
@@ -110,12 +112,7 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
 
     ]);
 
-    const [allAreas, setAllAreas] = useState<AreaType[]>([
-        { _id: uuidv4(), icon: faBorderAll, name: "All" },
-        { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
-        { _id: uuidv4(), icon: faDumbbell, name: "Exercise" },
-        { _id: uuidv4(), icon: faBriefcase, name: "Work" },
-    ]);
+    const [allAreas, setAllAreas] = useState<AreaType[]>([]);
 
     const [openSideBar, setOpenSideBar] = useState<boolean>(false);
     const [isDarkMode, setDarkMode] = useState<boolean>(false);
@@ -136,36 +133,97 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
     const [selectedItems, setSelectedItems] = useState<
         HabitType | AreaType | null
     >(null);
+    const { isLoaded, isSignedIn, user } = useUser();
+
+
 
     //us based date
     useEffect(() => {
-        function fetchData() {
-            const allHabitsData: HabitType[] = [
-                {
-                    _id: uuidv4(),
-                    name: "Habit 1",
-                    icon: textToIcon("faTools") as IconProp,
-                    frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
-                    areas: [
-                        { _id: uuidv4(), icon: faGraduationCap, name: "Study" },
-                        { _id: uuidv4(), icon: faDumbbell, name: "Exercise" },
 
-                    ],
-                    completedDays: [
-                        { _id: uuidv4(), date: "03/06/2024" }
-                    ],
-                },
+        const fetchAllHabits = async () => {
+            try {
+                const response = await fetch(`/api/habits?clerkId=${user?.id}`);
+                if(!response.ok) {
+                    throw new Error("Failed to fetch habits");
+                }
+                const data: {habits: HabitType[]} = await response.json();
+
+                const updatedHabits = data.habits.map((habit: HabitType) => {
+                    if(typeof habit.icon === "string") {
+                        return {
+                            ...habit,
+                            icon: textToIcon(habit.icon) as IconProp,
+                        };
+                    }
+                    return habit;
+                });
+                
+                const updatedHabitsWithAreas = updatedHabits.map((habit: HabitType) => {
+                    const updatedAreas = habit.areas.map((area: AreaType) => {
+                        if(typeof area.icon === "string") {
+                            return {
+                                ...area,
+                                icon: textToIcon(area.icon) as IconProp,
+                            };
+                        }
+                        return area;
+                    });
+                    return { ...habit, areas: updatedAreas};
+                });
+                setAllHabits(updatedHabitsWithAreas);
+            } catch(error) {
+                console.error("Error fetching projects:", error)
+            }
+        };
+
+        // function fetchData() {
+        //     const allHabitsData: HabitType[] = [
+        //         {
+        //             _id: uuidv4(),
+        //             name: "Habit 1",
+        //             icon: textToIcon("faTools") as IconProp,
+        //             clerkUserId: user?.id || "",
+        //             frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
+        //             areas: [
+        //                 {
+        //                     _id: uuidv4(),
+        //                     icon: textToIcon("faGraduationCap"),
+        //                     name: "Study"
+        //                 },
+        //                 {
+        //                     _id: uuidv4(),
+        //                     icon: textToIcon("faDumbbell"),
+        //                     name: "Exercise"
+        //                 },
+
+        //             ],
+        //             completedDays: [
+        //                 { _id: uuidv4(), date: "03/06/2024" }
+        //             ],
+        //         },
+        //     ];
+
+        //     setTimeout(() => {
+        //         setAllHabits(allHabitsData);
+        //     }, 1000);
+        // }
+
+
+        function fetchAllAreas() {
+            const allAreasData: AreaType[] = [
+                { _id: uuidv4(), icon: textToIcon("faGlobe"), name: "All" },
+                { _id: uuidv4(), icon: textToIcon("faGraduationCap"), name: "Study" },
+                { _id: uuidv4(), icon: textToIcon("faDumbbell"), name: "Exercise" },
+                { _id: uuidv4(), icon: textToIcon("faBriefcase"), name: "Work" },
             ];
 
-            setTimeout(() => {
-                setAllHabits(allHabitsData);
-            }, 1000);
+            setAllAreas(allAreasData);
         }
 
-        fetchData();
-    }, []);
-
-    //console.log(allHabits);
+        //fetchData();
+        fetchAllHabits();
+        fetchAllAreas();
+    }, [isSignedIn]);
 
     return (
         <GlobalContext.Provider
