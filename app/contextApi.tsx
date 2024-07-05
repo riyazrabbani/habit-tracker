@@ -87,7 +87,11 @@ const GlobalContext = createContext<GlobalContextType>({
     },
     openConfirmationWindowObject: {
         openConfirmationWindow: false,
-        setOpenConfirmationWindow: () => {},
+        setOpenConfirmationWindow: () => { },
+    },
+    selectedItemsObject: {
+        selectedItems: null,
+        setSelectedItems: () => {},
     }
 });
 
@@ -128,7 +132,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         left: 0,
     });
 
-    const [ openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
+    const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
+    const [selectedItems, setSelectedItems] = useState<
+        HabitType | AreaType | null
+    >(null);
 
     //us based date
     useEffect(() => {
@@ -210,6 +217,10 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
                 openConfirmationWindowObject: {
                     openConfirmationWindow,
                     setOpenConfirmationWindow,
+                },
+                selectedItemsObject: {
+                    selectedItems,
+                    setSelectedItems,
                 }
             }}
         >

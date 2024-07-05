@@ -11,11 +11,13 @@ interface dropMenuItem {
 }
 
 function DropDown() {
-    const { darkModeObject, openDropDownObject, dropDownPositionsObject, openConfirmationWindowObject } = useGlobalContextProvider();
+    const { darkModeObject, openDropDownObject, dropDownPositionsObject, openConfirmationWindowObject, selectedItemsObject, habitWindowObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const { openDropDown, setOpenDropDown } = openDropDownObject;
     const { dropDownPositions } = dropDownPositionsObject;
-    const { setOpenConfirmationWindow } = openConfirmationWindowObject;
+    const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
+    const { setSelectedItems } = selectedItemsObject;
+    const { openHabitWindow, setOpenHabitWindow } = habitWindowObject;
 
     const ref = useRef<HTMLDivElement>(null);
     const dropDownMenuItems: dropMenuItem[] = [
@@ -32,9 +34,10 @@ function DropDown() {
     }
 
     function handleClickOption(index: number) {
-        switch(index) {
+        switch (index) {
             case 0:
-                //add edit here
+                setOpenHabitWindow(true);
+                setOpenDropDown(false);
                 break;
             case 1:
                 setOpenConfirmationWindow(true);
@@ -49,6 +52,9 @@ function DropDown() {
         function handleOutsideClick(event: MouseEvent) {
             if (ref && !ref.current?.contains(event.target as Node)) {
                 setOpenDropDown(false);
+                if (!openConfirmationWindow && !openHabitWindow) {
+                    setSelectedItems(null);
+                }
             }
         }
 
@@ -84,7 +90,7 @@ function DropDown() {
                     onMouseLeave={() => handleHoverChange(index, false)}
                     className={`flex gap-2 items-center rounded-md p-3
                     select-none cursor-pointer transition-all `}
-                    onClick = {() => handleClickOption(index)}
+                    onClick={() => handleClickOption(index)}
                 >
                     <FontAwesomeIcon
                         style={{

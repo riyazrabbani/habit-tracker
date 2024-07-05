@@ -1,12 +1,31 @@
 import React from "react";
 import { useGlobalContextProvider } from "./contextApi";
 import { darkModeColor, defaultColor } from "../colors";
+import { AreaType, HabitType } from "./Types/GlobalTypes";
+import {deleteHabit } from "./utils/allHabitsUtils/deleteHabit"
 
 export function ConfirmationWindow() {
-    const { openConfirmationWindowObject, darkModeObject } = useGlobalContextProvider();
+    const { openConfirmationWindowObject, darkModeObject, selectedItemsObject, allHabitsObject } = useGlobalContextProvider();
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { isDarkMode } = darkModeObject;
+    const { setSelectedItems, selectedItems } = selectedItemsObject;
+    const { allHabits, setAllHabits } = allHabitsObject;
 
+    function isAreaType(item: any): item is AreaType {
+        return "name" in item && "icon" in item && !("frequency" in item);
+    }
+
+    //&& "notificationTime" in item
+    function isHabitType(item: any): item is HabitType {
+        return "frequency" in item;
+    }
+
+    function deleteOption() {
+        if (isHabitType(selectedItems)) {
+            deleteHabit(allHabits, setAllHabits, selectedItems);
+            setOpenConfirmationWindow(false);
+        }
+    }
     return (
         <div
             style={{
@@ -34,14 +53,18 @@ export function ConfirmationWindow() {
             </span>
             <div className="flex gap-2 mt-5">
                 <button
-                    onClick={() => setOpenConfirmationWindow(false)}
+                    onClick={() => {
+                        setOpenConfirmationWindow(false);
+                        setSelectedItems(null);
+                        }
+                    }
                     className=" border text-[13px] w-full px-10 p-3 rounded-md "
                 >
                     Cancel
                 </button>
                 <button
-                 
-                    className={` w-full px-10 text-[13px] p-3 rounded-md bg-customBlue `}
+                    onClick = {() => deleteOption()}
+                    className={` w-full px-10 text-[13px] p-3 text-white rounded-md bg-customBlue `}
                 >
                     Delete
                 </button>

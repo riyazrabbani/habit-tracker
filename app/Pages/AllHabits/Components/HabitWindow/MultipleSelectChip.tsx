@@ -7,9 +7,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
-import { defaultColor } from '@/colors';
+import { darkModeColor, defaultColor } from '@/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useGlobalContextProvider } from '@/app/contextApi';
+import { HabitType } from '@/app/Types/GlobalTypes';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,8 +51,11 @@ export default function MultipleSelectChip({
     onChange: (selectedAreasItems: any) => void;
 }) {
     const theme = useTheme();
-    const { allAreasObject } = useGlobalContextProvider();
+    const { allAreasObject, darkModeObject, selectedItemsObject, habitWindowObject } = useGlobalContextProvider();
     const { allAreas } = allAreasObject;
+    const { isDarkMode } = darkModeObject;
+    const {selectedItems, setSelectedItems} = selectedItemsObject;
+    const { openHabitWindow } = habitWindowObject;
 
     const [selectedAreas, setSelectedAreas] = React.useState<string[]>([]);
     const [selectedAreasItems, setSelectedAreasItems] = useState<any>([]);
@@ -82,6 +86,21 @@ export default function MultipleSelectChip({
         onChange(selectedAreasItems);
     }, [selectedAreasItems])
 
+    React.useEffect(() => {
+        if(selectedItems) {
+            const habitSelected = selectedItems as HabitType;
+            const { areas } = habitSelected;
+
+            const selectedArea = areas.map((area) => {
+                return area.name
+            });
+
+            setSelectedAreas(selectedArea);
+        } else {
+            setSelectedAreas([]);
+        }
+    }, [openHabitWindow])
+
     return (
         <div>
             <FormControl
@@ -89,18 +108,16 @@ export default function MultipleSelectChip({
                     m: 1,
                     width: "100%",
                     "& .Mui-focused .MuiInputLabel-root": {
-                        color: defaultColor.default
+                        color: isDarkMode ? darkModeColor.textColor : defaultColor.default
                     },
                     "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: defaultColor.default,
+                        borderColor: isDarkMode ? "#FFFFFF" : defaultColor.default,
                     },
                 }}
             >
                 <InputLabel
                     sx={{
-                        "& .Mui-focused ": {
-                            color: defaultColor.default
-                        },
+                        color: isDarkMode ? "#FFFFFF" : defaultColor.default
                     }}
                     id="demo-multiple-chip-label"
                 >
@@ -126,7 +143,7 @@ export default function MultipleSelectChip({
                     renderValue={(selected) => (
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                             {selected.map((value) => (
-                                <Chip key={value} label={value} />
+                                <Chip key={value} label={value}   sx={{ color: isDarkMode ? 'white' : 'black'}}/>
                             ))}
                         </Box>
                     )}

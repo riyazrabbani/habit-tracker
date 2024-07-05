@@ -15,12 +15,13 @@ const { v4: uuidv4 } = require('uuid');
 
 
 export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
-    const { darkModeObject, allHabitsObject, selectedCurrentDayObject, openDropDownObject, dropDownPositionsObject } = useGlobalContextProvider();
+    const { darkModeObject, allHabitsObject, selectedCurrentDayObject, openDropDownObject, dropDownPositionsObject, selectedItemsObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
     const { allHabits, setAllHabits } = allHabitsObject;
     const { selectedCurrentDate } = selectedCurrentDayObject;
     const { setOpenDropDown } = openDropDownObject;
     const {setDropDownPositions } = dropDownPositionsObject;
+    const { setSelectedItems } = selectedItemsObject;
 
     const [checked, setChecked] = useState(
         singleHabit.completedDays.some((day) => day.date === selectedCurrentDate)
@@ -88,6 +89,8 @@ export function HabitCard({ singleHabit }: { singleHabit: HabitType }) {
 
         event.stopPropagation();
         setOpenDropDown(true);
+
+        setSelectedItems(singleHabit);
     }
 
     useEffect(() => {

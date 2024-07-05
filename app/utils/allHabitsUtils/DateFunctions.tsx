@@ -6,20 +6,20 @@ export function getDateString(currentDate: Date, daysOffset = 0) {
     const month = String(adjustedDate.getMonth() + 1).padStart(2, "0");
     const day = String(adjustedDate.getDate()).padStart(2, "0");
 
-    console.log(adjustedDate);
 
     return `${year}-${month}-${day}`;
 
 }
 export function getCurrentDayName(dateString: string) {
     const daysOfWeek = [
-        "Sunday",
         "Monday",
         "Tuesday",
         "Wednesday",
         "Thursday",
         "Friday",
         "Saturday",
+        "Sunday",
+
     ];
 
     const currentDate = new Date(dateString);
@@ -46,7 +46,10 @@ export function getFormattedDate(dateString: string): string {
         "November",
         "December",
     ]
-    const day = currentDate.getDate();
+    const tomorrow = new Date(dateString);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const day = tomorrow.getDate();
+
     const month = monthNames[currentDate.getMonth()];
     const year = currentDate.getFullYear();
 
@@ -55,3 +58,4 @@ export function getFormattedDate(dateString: string): string {
     return formattedDate;
 
 }
+
