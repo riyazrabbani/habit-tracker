@@ -176,39 +176,6 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
             }
         };
 
-        // function fetchData() {
-        //     const allHabitsData: HabitType[] = [
-        //         {
-        //             _id: uuidv4(),
-        //             name: "Habit 1",
-        //             icon: textToIcon("faTools") as IconProp,
-        //             clerkUserId: user?.id || "",
-        //             frequency: [{ type: "Daily", days: ["Mo"], number: 1 }],
-        //             areas: [
-        //                 {
-        //                     _id: uuidv4(),
-        //                     icon: textToIcon("faGraduationCap"),
-        //                     name: "Study"
-        //                 },
-        //                 {
-        //                     _id: uuidv4(),
-        //                     icon: textToIcon("faDumbbell"),
-        //                     name: "Exercise"
-        //                 },
-
-        //             ],
-        //             completedDays: [
-        //                 { _id: uuidv4(), date: "03/06/2024" }
-        //             ],
-        //         },
-        //     ];
-
-        //     setTimeout(() => {
-        //         setAllHabits(allHabitsData);
-        //     }, 1000);
-        // }
-
-
         function fetchAllAreas() {
             const allAreasData: AreaType[] = [
                 { _id: uuidv4(), icon: textToIcon("faGlobe"), name: "All" },
@@ -223,7 +190,11 @@ function GlobalContextProvider({ children }: { children: ReactNode }) {
         //fetchData();
         fetchAllHabits();
         fetchAllAreas();
-    }, [isSignedIn]);
+    }, [isLoaded, isSignedIn]);
+
+    useEffect(() => {
+        setOpenSideBar(false);
+    }, [menuItems]);
 
     return (
         <GlobalContext.Provider
