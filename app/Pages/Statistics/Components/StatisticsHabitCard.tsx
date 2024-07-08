@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown, faBook } from "@fortawesome/free-solid-svg-icons";
-import CalendarHeatmap from 'react-calendar-heatmap';
+import CalendarHeatMap from 'react-calendar-heatmap'
 import 'react-calendar-heatmap/dist/styles.css';
 import { HabitType } from "../../../Types/GlobalTypes";
 import { useGlobalContextProvider } from "../../../contextApi";
@@ -120,12 +120,12 @@ const HabitHeatMap = ({habit}: {habit: HabitType}) => {
 
     return (
         <div>
-            <CalendarHeatmap
+            <CalendarHeatMap
                 startDate = {new Date("2024-01-01")}
                 endDate = {new Date("2024-12-31")}
                 values = {dateData}
                 showMonthLabels = {true}
-                showWeekDayLabels = {true}
+                showWeekdayLabels = {true}
                 classForValue = {(value: any) => {
                     if(!value) {
                         return "color-empty"
