@@ -47,8 +47,8 @@ function MainStatistics() {
             );
 
             totalAllHabitsOfCurrentDay = allhabitsOfCurrentDay.length;
-            const result = (totalHabitsOfCompletedDays / totalAllHabitsOfCurrentDay) * 100;
-
+            const result = parseFloat(((totalHabitsOfCompletedDays / totalAllHabitsOfCurrentDay) * 100).toFixed(2));
+            
             if (result === undefined || isNaN(result)) {
                 return 0;
             }
@@ -84,9 +84,9 @@ function MainStatistics() {
             </span>
 
             <div className="relative pt-3">
-                <CircularProgressBar progress={89} />
+                <CircularProgressBar progress={calculateThePercentageOfTodaysProgress(allHabits)} />
                 <div className="flex flex-col justify-center items-center absolute top-[54%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-                    <span className="font-bold text-xl text-customBlue">89%</span>
+                    <span className="font-bold text-xl text-customBlue">{calculateThePercentageOfTodaysProgress(allHabits)}%</span>
                     <span className="text-[11px]">{`Today's Progress`}</span>
                 </div>
             </div>
