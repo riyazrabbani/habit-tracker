@@ -1,17 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
 import { defaultColor, darkModeColor } from "@/colors";
 import { useGlobalContextProvider } from "@/app/contextApi";
+import { HabitType } from "@/app/Types/GlobalTypes";
+import { getCurrentDayName } from "@/app/utils/allHabitsUtils/DateFunctions";
+import AllHabits from "../../AllHabits";
+import { calculateStreak } from "@/app/Pages/Statistics/Components/StatisticsBoard";
+
 
 function MainStatistics() {
-    const { darkModeObject } = useGlobalContextProvider();
+    const { darkModeObject, selectedCurrentDayObject, allHabitsObject } = useGlobalContextProvider();
     const { isDarkMode } = darkModeObject;
+    const { selectedCurrentDate } = selectedCurrentDayObject;
+    const { allHabits, setAllHabits } = allHabitsObject;
 
-    const statisticsInfo = [
+
+    const [statisticsInfo, setStatisticsInfo] = useState([
         { id: 1, num: 7, subTitle: "Best streaks" },
-        { id: 2, num: 10, subTitle: "Perfect days" },
-    ];
+    ]);
+
+    const [progress, setProgress] = useState<number>(0);
+
+    function calculateThePercentageOfTodaysProgress(
+        allHabits: HabitType[]
+    ): number {
+        if (allHabits.length === 0 || !selectedCurrentDate) {
+            return 0;
+        }
+
+        let totalHabitsOfCompletedDays = 0;
+        let totalAllHabitsOfCurrentDay = 0;
+
+        if (allHabits) {
+            const completedHabitsOfCurrentDate: HabitType[] = allHabits.filter(
+                (habit) =>
+                    habit.completedDays.some((day) => day.date === selectedCurrentDate)
+            );
+
+            totalHabitsOfCompletedDays = completedHabitsOfCurrentDate.length;
+
+            const getTwoLetterOfCurrentDay = getCurrentDayName(selectedCurrentDate).slice(0, 2);
+
+            const allhabitsOfCurrentDay = allHabits.filter((habit) =>
+                habit.frequency[0].days.some((day) => day === getTwoLetterOfCurrentDay)
+            );
+
+            totalAllHabitsOfCurrentDay = allhabitsOfCurrentDay.length;
+            const result = (totalHabitsOfCompletedDays / totalAllHabitsOfCurrentDay) * 100;
+
+            if (result === undefined || isNaN(result)) {
+                return 0;
+            }
+            return result ?? 0;
+        }
+        return 0;
+    }
+
+    useEffect(() => {
+        setProgress(calculateThePercentageOfTodaysProgress(allHabits));
+    }, [selectedCurrentDate, allHabits])
+
+    useEffect(() => {
+        const streaks = allHabits.map((habit) => calculateStreak(habit));
+        const totalStreak = streaks.reduce((a, b) => a + b, 0);
+
+        const copyStatsInfo = [...statisticsInfo];
+        copyStatsInfo[0].num = totalStreak;
+        setStatisticsInfo(copyStatsInfo);
+    }, [allHabits])
+
     return (
         <div
             style={{
@@ -87,7 +145,7 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
                 fill="#888fd8"
                 paddingAngle={0}
                 dataKey="value"
-                stroke = "none"
+                stroke="none"
             >
                 {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

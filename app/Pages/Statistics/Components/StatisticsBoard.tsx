@@ -11,7 +11,7 @@ import {
     faOtter
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import CalendarHeatmap from "react-calendar-heatmap";
+// import CalendarHeatmap from "react-calendar-heatmap";
 import { useGlobalContextProvider } from "@/app/contextApi";
 import { darkModeColor, defaultColor } from "@/colors";
 import { getCurrentDayName } from "@/app/utils/allHabitsUtils/DateFunctions";
@@ -140,7 +140,7 @@ export default function StatisticsBoard() {
     );
 }
 
-function calculateStreak(habit: HabitType): number {
+export function calculateStreak(habit: HabitType): number {
     function getDayOfWeek(dateString: string): string {
         const date = new Date(dateString);
         const days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];

@@ -25,3 +25,22 @@
     text-wrap: balance;
   }
 }
+.react-calendar-heatmap .color-empty {
+  fill: "#f3f4f6";
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: "#f3f4f6";
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: "#d6e685";
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: "#0000ff";
+}
+
+.react-calendar-heatmap .color-scale-4 {
+  fill: "#0000ff";
+}

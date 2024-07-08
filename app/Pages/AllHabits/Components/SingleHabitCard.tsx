@@ -185,6 +185,6 @@ async function editTheHabitInServer(habit: HabitType) {
     });
 
     if(!response.ok) {
-        throw new Error("Failed to edit habit");
+        //throw new Error("Failed to edit habit");
     }
 }
